@@ -367,7 +367,7 @@ h2 {
   display: inline-block;
   position: relative;
   box-sizing: border-box;
-  animation: rotation 2s linear infinite;
+  animation: rotation 0.5s linear infinite;
 }
 .loading-animation::after {
   content: '';  
@@ -382,7 +382,7 @@ h2 {
 }
 
 .fade-out {
-  animation: fadeOut 1s forwards; /* Fade out animation */
+  animation: fadeOut 0.5s forwards; /* Fade out animation */
 }
 
 @keyframes fadeOut {
