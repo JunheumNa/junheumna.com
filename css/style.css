@@ -343,18 +343,47 @@ h2 {
   display: inline;
 }
 
+/*Loading......*/
 
+#skeleton-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0; /* Background color of the skeleton screen */
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's on top of other content */
+}
 
+.loading-animation {
+  width: 50px; /* Adjust the size of the loading animation */
+  height: 50px; /* Adjust the size of the loading animation */
+  border: 2px solid transparent;
+  border-top-color: black; /* Color of the loading animation */
+  border-bottom-color: white; /* Color of the loading animation */
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* Animation for spinning */
+  opacity: 1; /* Initially fully opaque */
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
+.fade-out {
+  animation: fadeOut 1s forwards; /* Fade out animation */
+}
 
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
 
-
-
-
-
-
-
+/*END of Loading......*/
 
 
 
