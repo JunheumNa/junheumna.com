@@ -360,44 +360,34 @@ h2 {
 }
 
 .loading-animation {
-  width: 48px;
-  height: 48px;
-  background: #d9d9d9;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  box-sizing: border-box;
-  animation: rotation 0.5s linear infinite;
+  width: 70px; /* Adjust the size of the loading animation */
+  height: 70px; /* Adjust the size of the loading animation */
+  text-align: center;
+  transform-origin: center;
+  animation: spin 1s infinite; /* Animation for spinning */
+  opacity: 1; /* Initially fully opaque */
 }
-.loading-animation::after {
-  content: '';  
-  box-sizing: border-box;
+
+.loading-animation p {
   position: absolute;
-  left: 50%;
   top: 50%;
-  border: 24px solid;
-  border-color: transparent #FFF;
-  border-radius: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .fade-out {
-  animation: fadeOut 0.5s forwards; /* Fade out animation */
+  animation: fadeOut 1s forwards; /* Fade out animation */
 }
 
 @keyframes fadeOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-} 
 
 /*END of Loading......*/
 
