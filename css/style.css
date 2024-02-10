@@ -280,6 +280,11 @@ div{
   .grid-item {
     width: 100%;
   }
+
+  #skeleton-screen, .loading-animation {
+    display: none !important;
+  }
+
 }
 
 @media screen and (min-width: 1200px) {
@@ -347,10 +352,10 @@ h2 {
 
 #skeleton-screen {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -50px;
+  left: -50px;
+  width: calc(100% + 100px);
+  height: calc(100% + 100px);
   background-color: #f0f0f0; /* Background color of the skeleton screen */
   display: flex;
   justify-content: center;
