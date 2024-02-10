@@ -281,10 +281,6 @@ div{
     width: 100%;
   }
 
-  #skeleton-screen, .loading-animation {
-    display: none !important;
-  }
-
 }
 
 @media screen and (min-width: 1200px) {
