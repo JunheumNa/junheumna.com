@@ -106,7 +106,7 @@ body {
 
 .search {
   position: absolute;
-  top: 1rem;
+  top: 0.9rem;
   right: 2.5rem;
   z-index: 1000;
   cursor: pointer;
