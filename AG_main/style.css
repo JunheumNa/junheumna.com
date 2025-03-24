@@ -85,6 +85,18 @@ body {
   animation-delay: 1.75s;
 }
 
+.header-nav a {
+  color: inherit;
+  text-decoration: none;
+  width: calc( 100% / 8);
+  text-align: center;
+  opacity: .65;
+}
+
+.header-nav a:hover {
+  opacity: 1;
+}
+
 .menu-toggle {
   display: none;
   position: absolute;
