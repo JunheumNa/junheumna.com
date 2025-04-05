@@ -2734,5 +2734,42 @@
       }
     });
   });
+
+
+
+
+  const summaries = document.querySelectorAll('summary');
+  let activeSummary = null;
+
+  summaries.forEach(summary => {
+    summary.addEventListener('click', () => {
+      // 이전 activeSummary가 존재하고, 새로 클릭된 것과 다르면 리셋
+      if (activeSummary && activeSummary !== summary) {
+        activeSummary.classList.remove('focused');
+        summaries.forEach(other => {
+          other.classList.remove('dimmed');
+        });
+      }
+
+      // 현재 클릭된 summary가 이미 focused면 해제
+      if (summary.classList.contains('focused')) {
+        summary.classList.remove('focused');
+        summaries.forEach(other => {
+          other.classList.remove('dimmed');
+        });
+        activeSummary = null;
+      } else {
+        // 새로 클릭된 summary에 focus, 나머지는 dim
+        summaries.forEach(other => {
+          if (other !== summary) {
+            other.classList.add('dimmed');
+          } else {
+            other.classList.add('focused');
+          }
+        });
+        activeSummary = summary;
+      }
+    });
+  });
 </script>
 </html>
