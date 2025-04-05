@@ -43,6 +43,7 @@ details {
   padding-top: 1rem;
   display: flex;
   position: relative;
+  width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: normal;
 }
@@ -54,6 +55,7 @@ details .content {
 }
 
 summary {
+  width: 100%;
   list-style: none;
   list-style-type: none;
   cursor: pointer;
