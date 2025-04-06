@@ -502,13 +502,6 @@
 				</div>
 			</div>
 		</details>
-		<details><summary class="notext">24년 10개월 31일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
-				</div>
-			</div>
-		</details>
 		<details><summary>24년 11개월후</summary>
 			<div class="content">
 				<div class="content-inner">
@@ -946,13 +939,6 @@
 				</div>
 			</div>
 		</details>
-		<details><summary class="notext">25년 31일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
-				</div>
-			</div>
-		</details>
 		<details><summary class="notext">25년 1개월후</summary>
 			<div class="content">
 				<div class="content-inner">
@@ -1167,13 +1153,6 @@
 			</div>
 		</details>
 		<details><summary class="notext">25년 1개월 30일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
-				</div>
-			</div>
-		</details>
-		<details><summary class="notext">25년 1개월 31일후</summary>
 			<div class="content">
 				<div class="content-inner">
 					<p></p>
@@ -1608,13 +1587,6 @@
 			<div class="content">
 				<div class="content-inner">
 					<p>서울 지하철 6호선 개통</p>
-				</div>
-			</div>
-		</details>
-		<details><summary class="notext">25년 3개월 31일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
 				</div>
 			</div>
 		</details>
@@ -2064,13 +2036,6 @@
 				</div>
 			</div>
 		</details>
-		<details><summary class="notext">25년 5개월 31일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
-				</div>
-			</div>
-		</details>
 		<details><summary class="notext">25년 6개월후</summary>
 			<div class="content">
 				<div class="content-inner">
@@ -2507,13 +2472,6 @@
 				</div>
 			</div>
 		</details>
-		<details><summary class="notext">25년 7개월 31일후</summary>
-			<div class="content">
-				<div class="content-inner">
-					<p></p>
-				</div>
-			</div>
-		</details>
 		<details><summary class="notext">25년 8개월후</summary>
 			<div class="content">
 				<div class="content-inner">
@@ -2686,6 +2644,47 @@
 		</details>
 	</div>
 </body>
+
+<script>
+  document.querySelector('.from').addEventListener('click', () => {
+    const allDetails = Array.from(document.querySelectorAll('details'))
+      .filter(d => !d.querySelector('summary').classList.contains('notext'));
+
+    if (allDetails.length === 0) return;
+
+    const randomDetail = allDetails[Math.floor(Math.random() * allDetails.length)];
+    const content = randomDetail.querySelector('.content');
+    const contentInner = content.querySelector('.content-inner');
+
+    // 다른 detail 닫기
+    document.querySelectorAll('details[open]').forEach((openDetail) => {
+      if (openDetail !== randomDetail) {
+        const otherContent = openDetail.querySelector('.content');
+        const otherInner = otherContent.querySelector('.content-inner');
+        otherContent.style.height = otherInner.scrollHeight + "px";
+        requestAnimationFrame(() => {
+          otherContent.style.height = "0px";
+        });
+        otherContent.addEventListener('transitionend', () => {
+          openDetail.open = false;
+        }, { once: true });
+      }
+    });
+
+    // 해당 detail 열기
+    if (!randomDetail.open) {
+      randomDetail.open = true;
+    }
+    content.style.height = contentInner.scrollHeight + "px";
+
+    // 부드럽게 가운데로 스크롤
+    randomDetail.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  });
+</script>
+
 <script>
   const allDetails = document.querySelectorAll('details');
 
@@ -2731,43 +2730,6 @@
         content.addEventListener('transitionend', () => {
           detail.open = false;
         }, { once: true });
-      }
-    });
-  });
-
-
-
-
-  const summaries = document.querySelectorAll('summary');
-  let activeSummary = null;
-
-  summaries.forEach(summary => {
-    summary.addEventListener('click', () => {
-      // 이전 activeSummary가 존재하고, 새로 클릭된 것과 다르면 리셋
-      if (activeSummary && activeSummary !== summary) {
-        activeSummary.classList.remove('focused');
-        summaries.forEach(other => {
-          other.classList.remove('dimmed');
-        });
-      }
-
-      // 현재 클릭된 summary가 이미 focused면 해제
-      if (summary.classList.contains('focused')) {
-        summary.classList.remove('focused');
-        summaries.forEach(other => {
-          other.classList.remove('dimmed');
-        });
-        activeSummary = null;
-      } else {
-        // 새로 클릭된 summary에 focus, 나머지는 dim
-        summaries.forEach(other => {
-          if (other !== summary) {
-            other.classList.add('dimmed');
-          } else {
-            other.classList.add('focused');
-          }
-        });
-        activeSummary = summary;
       }
     });
   });
