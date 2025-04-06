@@ -2646,13 +2646,27 @@
 </body>
 
 <script>
+  const summaries = Array.from(document.querySelectorAll('details'))
+    .filter(d => !d.querySelector('summary').classList.contains('notext'));
+
+  let visitedDetails = new Set();
+
   document.querySelector('.from').addEventListener('click', () => {
-    const allDetails = Array.from(document.querySelectorAll('details'))
-      .filter(d => !d.querySelector('summary').classList.contains('notext'));
+    // 아직 방문하지 않은 detail만 필터링
+    const unvisited = summaries.filter(d => !visitedDetails.has(d));
 
-    if (allDetails.length === 0) return;
+    // 모두 방문했다면 초기화 (다시 시작)
+    if (unvisited.length === 0) {
+      visitedDetails.clear();
+    }
 
-    const randomDetail = allDetails[Math.floor(Math.random() * allDetails.length)];
+    // 다시 계산
+    const pool = summaries.filter(d => !visitedDetails.has(d));
+    const randomDetail = pool[Math.floor(Math.random() * pool.length)];
+
+    // 마킹
+    visitedDetails.add(randomDetail);
+
     const content = randomDetail.querySelector('.content');
     const contentInner = content.querySelector('.content-inner');
 
@@ -2671,19 +2685,21 @@
       }
     });
 
-    // 해당 detail 열기
+    // 현재 detail 열기
     if (!randomDetail.open) {
       randomDetail.open = true;
     }
+
     content.style.height = contentInner.scrollHeight + "px";
 
-    // 부드럽게 가운데로 스크롤
+    // 중앙으로 스크롤
     randomDetail.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
     });
   });
 </script>
+
 
 <script>
   const allDetails = document.querySelectorAll('details');
