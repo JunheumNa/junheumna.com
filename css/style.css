@@ -146,6 +146,12 @@ a {
 }
 
 .category_pannel {
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  font-weight: 350;
+  text-align:center;
+
 }
 
 /* menu toggle */
