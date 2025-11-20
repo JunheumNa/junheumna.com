@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Na Junheum</title>
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+		  $('.nav-menu-wrapper').on('click.mobileNav', function(){
+			$('.nav-menu-wrapper .nav-menu').toggleClass('menu-trigger-open');
+			$('.menu-items').toggle(); 
+			/*
+			$('.nav-title, .nav-language').toggle();
+			*/
+		  });
+		});
+	</script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+	<script type="text/javascript" src="js/skeleton.js"></script>
+	<div class="nav-container">
+		<div class="nav">
+			<div class="nav-menu-wrapper">
+				<div class="nav-menu"><span class="lines"></span></div>
+			</div>
+			<div class="nav-title">
+				<a href="index.html" data-en="Junheum Na">나준흠</a>
+			</div> 
+			<div class="nav-language">
+				<button id="lang" data-en="한">EN</button>
+			</div>
+		</div>
+	</div>
+	<div class="menu-items">
+		<div class="category contact">
+			<a href="mailto:junheumna@gmail.com" data-en="najun99@gmail.com">najun99@gmail.com</a>
+			<a href="https://www.instagram.com/junheum.na/" target="_blank" data-en="@junheum.na">@junheum.na</a>
+		</div>
+		<div class="category work intro">
+			<a href="/gallery/0" data-photo-id="0" class="category-title" data-en="Introduction">소개</a>
+		</div>
+		<div class="category work">
+			<button class="category-title" data-en="Outcome">결과물</button>
+			<div class="category-inner">
+				<ul>
+					<li><button class="sub-items" data-filter="Exhibition" data-en="Exhibition">전시</button></li>
+					<li><button class="sub-items" data-filter="Drawing" data-en="Drawing">드로잉</button></li>
+					<li><button class="sub-items" data-filter="Book" data-en="Book">책</button></li>
+					<li><button class="sub-items" data-filter="Identity" data-en="Identity">아이덴티티</button></li>
+					<li><button class="sub-items" data-filter="Poster" data-en="Poster">포스터</button></li>
+					<li><button class="sub-items" data-filter="Motion" data-en="Motion">영상</button></li>
+					<li><button class="sub-items" data-filter="Print-collateral" data-en="Print Collateral">인쇄 홍보물</button></li>
+					<li><button class="sub-items" data-filter="Website" data-en="Website">웹사이트</button></li>
+					<li><button class="sub-items" data-filter="Space" data-en="Space">공간</button></li>
+					<li><button class="sub-items" data-filter="Miscellaneous" data-en="Miscellaneous">기타</button></li>
+				</ul>
+			</div>
+		</div>
+		<div class="category work">
+			<button class="category-title" data-en="Commissioner">의뢰/주최</button>
+			<div class="category-inner">
+				<ul>
+					<li><button class="sub-items" data-filter="personal-project" data-en="Personal project">개인 작업</button></li>
+					<li><button class="sub-items" data-filter="Drei-Stack" data-en="Drei Stack">드라이스택</button></li>
+					<li><button class="sub-items" data-filter="DAEKYO-Culture-Foundation" data-en="DAEKYO Culture Foundation">대교문화재단</button></li>
+					<li><button class="sub-items" data-filter="Alternative-Space-Loop" data-en="Alternative Space Loop">대안공간 루프</button></li>
+					<li><button class="sub-items" data-filter="Vine-Extra-Color" data-en="Vine Extra Color">바인엑스트라칼라</button></li>
+					<li><button class="sub-items" data-filter="Verseday" data-en="Verseday">버스데이</button></li>
+					<li><button class="sub-items" data-filter="Seoul-Museum-of-Art" data-en="Seoul Museum of Art">서울시립미술관</button></li>
+					<li><button class="sub-items" data-filter="SOOM" data-en="SOOM">숨코리아</button></li>
+					<li><button class="sub-items" data-filter="Flexible-People" data-en="Flexible People">스튜디오 유연한</button></li>
+					<li><button class="sub-items" data-filter="AABB" data-en="AABB">에이에이비비</button></li>
+					<li><button class="sub-items" data-filter="SHINSEGAE-Gallery" data-en="SHINSEGAE Gallery">신세계 갤러리</button></li>
+					<li><button class="sub-items" data-filter="Ilmin-Museum-of-Art" data-en="Ilmin Museum of Art">일민미술관</button></li>
+					<li><button class="sub-items" data-filter="Jeonju-International-Film-Festival" data-en="Jeonju International Film Festival">전주국제영화제</button></li>
+					<li><button class="sub-items" data-filter="KASSENTAH" data-en="KASSENTAH">카쎈타</button></li>
+					<li><button class="sub-items" data-filter="Design-History-Society-of-Korea" data-en="Design History Society of Korea">한국디자인사학회</button></li>
+					<li><button class="sub-items" data-filter="Korea-Media-Art-Association" data-en="Korea Media Art Association">한국미디어아트협회</button></li>
+					<li><button class="sub-items" data-filter="Korean-Society-of-Typography" data-en="Korean Society of Typography">한국타이포그라피협회</button></li>
+					<li><button class="sub-items" data-filter="AG-Typography-Institute" data-en="AG Typography Institute">AG타이포그라피연구소</button></li>
+				</ul>
+			</div>
+		</div>
+		<div class="category work">
+			<button class="category-title" data-en="Year">연도</button>
+			<div class="category-inner">
+				<ul>
+					<li><button class="sub-items" data-filter="2025" data-en="2025">2025</button></li>
+					<li><button class="sub-items" data-filter="2024" data-en="2024">2024</button></li>
+					<li><button class="sub-items" data-filter="2023" data-en="2023">2023</button></li>
+					<li><button class="sub-items" data-filter="2022" data-en="2022">2022</button></li>
+					<li><button class="sub-items" data-filter="2019" data-en="2019">2019</button></li>
+					<li><button class="sub-items" data-filter="2018" data-en="2018">2018</button></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="grid-container">
+		<div class="category_pannel"></div>
+		<div class="grid">
+			<div class="grid-item" data-type="Drawing,Poster,Design-History-Society-of-Korea,2025">
+				<a href="/gallery/86" data-photo-id="86">
+					<img src="img/86.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,KASSENTAH,2025">
+				<a href="/gallery/85" data-photo-id="85">
+					<img src="img/85.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Exhibition,Space,2025">
+				<a href="/gallery/84" data-photo-id="84">
+					<img src="img/84.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/83" data-photo-id="83">
+					<img src="img/83.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Identity,Print-collateral,2025">
+				<a href="/gallery/82" data-photo-id="82">
+					<img src="img/82.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/81" data-photo-id="81">
+					<img src="img/81.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/80" data-photo-id="80">
+					<img src="img/80.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/79" data-photo-id="79">
+					<img src="img/79.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,2025">
+				<a href="/gallery/78" data-photo-id="78">
+					<img src="img/78.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/77" data-photo-id="77">
+					<img src="img/77.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,2025">
+				<a href="/gallery/76" data-photo-id="76">
+					<img src="img/76.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,2025">
+				<a href="/gallery/75" data-photo-id="75">
+					<img src="img/75.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Website,2025">
+				<a href="/gallery/74" data-photo-id="74">
+					<img src="img/74.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2025">
+				<a href="/gallery/73" data-photo-id="73">
+					<img src="img/73.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,2025">
+				<a href="/gallery/72" data-photo-id="72">
+					<img src="img/72.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Poster,2025">
+				<a href="/gallery/71" data-photo-id="71">
+					<img src="img/71.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Website,2025">
+				<a href="/gallery/70" data-photo-id="70">
+					<img src="img/70.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Exhibition,Space,2025">
+				<a href="/gallery/69" data-photo-id="69">
+					<img src="img/69.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Miscellaneous,2025">
+				<a href="/gallery/68" data-photo-id="68">
+					<img src="img/68.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Motion,2024">
+				<a href="/gallery/67" data-photo-id="67">
+					<img src="img/67.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,2024">
+				<a href="/gallery/66" data-photo-id="66">
+					<img src="img/66.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,Identity,2024">
+				<a href="/gallery/65" data-photo-id="65">
+					<img src="img/65.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,2024">
+				<a href="/gallery/64" data-photo-id="64">
+					<img src="img/64.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Book,2024">
+				<a href="/gallery/63" data-photo-id="63">
+					<img src="img/63.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,2024">
+				<a href="/gallery/62" data-photo-id="62">
+					<img src="img/62.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Book,2024">
+				<a href="/gallery/61" data-photo-id="61">
+					<img src="img/61.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Identity,2024">
+				<a href="/gallery/60" data-photo-id="60">
+					<img src="img/60.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Space,2024">
+				<a href="/gallery/59" data-photo-id="59">
+					<img src="img/59.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,2024">
+				<a href="/gallery/58" data-photo-id="58">
+					<img src="img/58.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Print-collateral,2024">
+				<a href="/gallery/57" data-photo-id="57">
+					<img src="img/57.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,Identity,Ilmin-Museum-of-Art,2024">
+				<a href="/gallery/56" data-photo-id="56">
+					<img src="img/56-1.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,Identity,Ilmin-Museum-of-Art,2024">
+				<a href="/gallery/56" data-photo-id="56">
+					<img src="img/56-2.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,Identity,Ilmin-Museum-of-Art,2024">
+				<a href="/gallery/56" data-photo-id="56">
+					<img src="img/56-3.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,2024">
+				<a href="/gallery/55" data-photo-id="55">
+					<img src="img/55.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,Motion,2024">
+				<a href="/gallery/54" data-photo-id="54">
+					<img src="img/54.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,Identity,2024">
+				<a href="/gallery/53" data-photo-id="53">
+					<img src="img/53.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,2024">
+				<a href="/gallery/52" data-photo-id="52">
+					<img src="img/52.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Print-collateral,2024">
+				<a href="/gallery/51" data-photo-id="51">
+					<img src="img/51.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Space,2024">
+				<a href="/gallery/50" data-photo-id="50">
+					<img src="img/50.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Identity,Website,2024">
+				<a href="/gallery/49" data-photo-id="49">
+					<img src="img/49.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Miscellaneous,personal-project,2024">
+				<a href="/gallery/48" data-photo-id="48">
+					<img src="img/48.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Korean-Society-of-Typography,2023">
+				<a href="/gallery/47" data-photo-id="47">
+					<img src="img/47.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,personal-project,2023">
+				<a href="/gallery/46" data-photo-id="46">
+					<img src="img/46.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Website,personal-project,2023">
+				<a href="/gallery/45" data-photo-id="45">
+					<img src="img/45.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2023">
+				<a href="/gallery/44" data-photo-id="44">
+					<img src="img/44.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,personal-project,2023">
+				<a href="/gallery/43" data-photo-id="43">
+					<img src="img/43.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,Motion,personal-project,2023">
+				<a href="/gallery/42" data-photo-id="42">
+					<img src="img/42.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Space,personal-project,2023">
+				<a href="/gallery/41" data-photo-id="41">
+					<img src="img/41.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2023">
+				<a href="/gallery/40" data-photo-id="40">
+					<img src="img/40.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Identity,Website,personal-project,2023">
+				<a href="/gallery/39" data-photo-id="39">
+					<img src="img/39.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,personal-project,2023">
+				<a href="/gallery/38" data-photo-id="38">
+					<img src="img/38.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,personal-project,2023">
+				<a href="/gallery/37" data-photo-id="37">
+					<img src="img/37.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Poster,personal-project,2023">
+				<a href="/gallery/36" data-photo-id="36">
+					<img src="img/36.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Book,personal-project,2023">
+				<a href="/gallery/35" data-photo-id="35">
+					<img src="img/35-1.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Book,personal-project,2023">
+				<a href="/gallery/35" data-photo-id="35">
+					<img src="img/35-2.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Website,personal-project,2023">
+				<a href="/gallery/34" data-photo-id="34">
+					<img src="img/34.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,personal-project,2023">
+				<a href="/gallery/33" data-photo-id="33">
+					<img src="img/33.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Poster,Motion,personal-project,2023">
+				<a href="/gallery/32" data-photo-id="32">
+					<img src="img/32.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Space,personal-project,2023">
+				<a href="/gallery/31" data-photo-id="31">
+					<img src="img/31.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Motion,personal-project,2023">
+				<a href="/gallery/30" data-photo-id="30">
+					<img src="img/30.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2023">
+				<a href="/gallery/29" data-photo-id="29">
+					<img src="img/29.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2023">
+				<a href="/gallery/28" data-photo-id="28">
+					<img src="img/28.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Identity,Space,personal-project,2022">
+				<a href="/gallery/27" data-photo-id="27">
+					<img src="img/27.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Poster,personal-project,2022">
+				<a href="/gallery/26" data-photo-id="26">
+					<img src="img/26.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Exhibition,Book,personal-project,2022">
+				<a href="/gallery/25" data-photo-id="25">
+					<img src="img/25.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Space,Exhibition,personal-project,2022">
+				<a href="/gallery/24" data-photo-id="24">
+					<img src="img/24.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/22" data-photo-id="22">
+					<img src="img/23.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/22" data-photo-id="22">
+					<img src="img/22.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Print-collateral,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/21" data-photo-id="21">
+					<img src="img/21.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/19" data-photo-id="19">
+					<img src="img/20.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Exhibition,Identity,Motion,personal-project,2022">
+				<a href="/gallery/19" data-photo-id="19">
+					<img src="img/19.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/18" data-photo-id="18">
+					<img src="img/18.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Space,Exhibition,Identity,personal-project,2022">
+				<a href="/gallery/17" data-photo-id="17">
+					<img src="img/17.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,personal-project,2022">
+				<a href="/gallery/15" data-photo-id="15">
+					<img src="img/16.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,personal-project,2022">
+				<a href="/gallery/15" data-photo-id="15">
+					<img src="img/15.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,personal-project,2022">
+				<a href="/gallery/13" data-photo-id="13">
+					<img src="img/14.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,personal-project,2022">
+				<a href="/gallery/13" data-photo-id="13">
+					<img src="img/13.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Motion,personal-project,2022">
+				<a href="/gallery/12" data-photo-id="12">
+					<img src="img/12.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Motion,personal-project,2022">
+				<a href="/gallery/11" data-photo-id="11">
+					<img src="img/11.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Motion,personal-project,2022">
+				<a href="/gallery/10" data-photo-id="10">
+					<img src="img/10.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Miscellaneous,Drawing,personal-project,2022">
+				<a href="/gallery/9" data-photo-id="9">
+					<img src="img/9.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Book,Drawing,personal-project,2022">
+				<a href="/gallery/8" data-photo-id="8">
+					<img src="img/8.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Exhibition,personal-project,2019">
+				<a href="/gallery/7" data-photo-id="7">
+					<img src="img/7.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Exhibition,Identity,personal-project,2019">
+				<a href="/gallery/5" data-photo-id="5">
+					<img src="img/6.jpg">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Poster,Motion,Exhibition,Identity,personal-project,2019">
+				<a href="/gallery/5" data-photo-id="5">
+					<img src="img/5.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Motion,personal-project,2019">
+				<a href="/gallery/4" data-photo-id="4">
+					<img src="img/4.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2019">
+				<a href="/gallery/3" data-photo-id="3">
+					<img src="img/3.png">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,Motion,personal-project,2018">
+				<a href="/gallery/2" data-photo-id="2">
+					<img src="img/2.gif">
+				</a>
+			</div>
+			<div class="grid-item" data-type="Drawing,personal-project,2018">
+				<a href="/gallery/1" data-photo-id="1">
+					<img src="img/1.jpg">
+				</a>
+			</div>
+		</div>
+	</div>
+<div id="modal-0" class="modal" aria-hidden="true" role="dialog" aria-label="project 0">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="나준흠">나준흠</h1>
+  	</div>
+  	<div class="modal_container">
+		<div class="modal_info">
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-1" class="modal" aria-hidden="true" role="dialog" aria-label="project 1">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Symmetry">대칭</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/1.jpg" alt="project 1" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-2" class="modal" aria-hidden="true" role="dialog" aria-label="project 2">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Dynamics 1">역동 1</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/2.gif" alt="project 2" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-3" class="modal" aria-hidden="true" role="dialog" aria-label="project 3">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Tongue">혀</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/3.png" alt="project 3" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-4" class="modal" aria-hidden="true" role="dialog" aria-label="project 4">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Dynamics 2">역동 2</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/4.gif" alt="project 4" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-5" class="modal" aria-hidden="true" role="dialog" aria-label="project 5">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="OOMJIGGGOL">움직꼴</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/5.gif" alt="project 5" />
+	    	<img src="img/6.jpg" alt="project 5" />
+	    	<img src="img/5_sub1.png" alt="project 5" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-7" class="modal" aria-hidden="true" role="dialog" aria-label="project 7">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="FLUX">Flux</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/7.jpg" alt="project 7" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-8" class="modal" aria-hidden="true" role="dialog" aria-label="project 8">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Chain Reaction">Chain Reaction</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/8.jpg" alt="project 8" />
+	    	<img src="img/8_sub1.png" alt="project 8" />
+	    	<img src="img/8_sub2.png" alt="project 8" />
+	    	<img src="img/8_sub3.png" alt="project 8" />
+	    	<img src="img/8_sub4.png" alt="project 8" />
+	    	<p data-en="Chain Reaction threads together recurrent events into interlocking chain links.<br>Photo: AABB">《Chain Reaction》은 연쇄적으로 순환하는 사건들을 사슬 고리의 형태로 꿰어낸다.<br>사진: 에이에이비비</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-9" class="modal" aria-hidden="true" role="dialog" aria-label="project 9">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="2022 calendar">2022 달력</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<img src="img/9.jpg" alt="project 9" />
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-10" class="modal" aria-hidden="true" role="dialog" aria-label="project 10">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="FRACTAL">FRACTAL</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<div class="video-container"><iframe class="video" src="https://www.youtube.com/embed/_tSMnLgPF9Y?autoplay=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-11" class="modal" aria-hidden="true" role="dialog" aria-label="project 11">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="2022 YADZ promotion video">2022 야즈 홍보영상</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/XQ4uP2AY0p4?autoplay=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-12" class="modal" aria-hidden="true" role="dialog" aria-label="project 12">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="LOOPER">LOOPER</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/rvDl06t-CMU?autoplay=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-13" class="modal" aria-hidden="true" role="dialog" aria-label="project 13">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Moonassi: Becoming an Artist Who Forgets Himself">무나씨: 나를 잊는 작가되기</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/14.jpg" alt="project 14" />
+	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/rvDl06t-CMU?autoplay=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-15" class="modal" aria-hidden="true" role="dialog" aria-label="project 15">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Sierra's Paradox">시에라의 역설</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/16.jpg" alt="project 15" />
+			<img src="img/15.gif" alt="project 15" />
+			<p data-en="Dummy<br>① Alias for human body models, mannequins, robots.<br>② A large mass formed by many objects piled together.">더미<br>① 인체 모형 마네킹, 꼭두각시, 로봇의 별칭.<br>② 많은 물건이 한데 모여 쌓인 큰 덩어리.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-17" class="modal" aria-hidden="true" role="dialog" aria-label="project 17">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Text & Image">텍스트 & 이미지</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/17.jpg" alt="project 17" />
+			<img src="img/17_sub1.png" alt="project 17" />
+			<img src="img/17_sub2.png" alt="project 17" />
+			<p data-en="Text & Image is an image experimentation project inspired by experimental literature. In this project, random rules are imposed to introduce chance elements between text and image, and based on this, participants explore visual language where meaning is expanded through randomness. Participants investigate the interaction between text and image, deriving creative results based on illustration by discovering their own relationships between text and image through the process.">《텍스트 & 이미지》는 실험문학에서 영감을 받은 이미지 실험 프로젝트이다. 이 프로젝트에서는 임의적인 규칙을 제시함으로써 텍스트와 이미지 사이에 우연적 요소를 가미하고, 이를 토대로 하여 참여자들은 우연성을 통해 의미가 확장되는 시각 언어를 탐구한다. 참여자는 텍스트와 이미지의 상호작용을 탐구하며, 자신만의 텍스트와 이미지 관계성을 찾아내는 과정을 통해서 일러스트레이션 기반의 창의적인 결과물을 도출해낸다.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-18" class="modal" aria-hidden="true" role="dialog" aria-label="project 18">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Text & Image">텍스트 & 이미지</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/18.png" alt="project 18" />
+			<img src="img/18_sub1.jpg" alt="project 18" />
+			<img src="img/18_sub2.jpg" alt="project 18" />
+			<img src="img/18_sub3.jpg" alt="project 18" />
+			<img src="img/18_sub4.jpg" alt="project 18" />
+			<img src="img/18_sub5.jpg" alt="project 18" />
+			<p data-en="Text & Image is an image experimentation project inspired by experimental literature. In this project, random rules are imposed to introduce chance elements between text and image, and based on this, participants explore visual language where meaning is expanded through randomness. Participants investigate the interaction between text and image, deriving creative results based on illustration by discovering their own relationships between text and image through the process.">《텍스트 & 이미지》는 실험문학에서 영감을 받은 이미지 실험 프로젝트이다. 이 프로젝트에서는 임의적인 규칙을 제시함으로써 텍스트와 이미지 사이에 우연적 요소를 가미하고, 이를 토대로 하여 참여자들은 우연성을 통해 의미가 확장되는 시각 언어를 탐구한다. 참여자는 텍스트와 이미지의 상호작용을 탐구하며, 자신만의 텍스트와 이미지 관계성을 찾아내는 과정을 통해서 일러스트레이션 기반의 창의적인 결과물을 도출해낸다.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-19" class="modal" aria-hidden="true" role="dialog" aria-label="project 19">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="Text & Image">텍스트 & 이미지</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/20.jpg" alt="project 19" />
+			<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/Cm4XK8bpvw0?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=Cm4XK8bpvw0" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+			<p data-en="Text & Image is an image experimentation project inspired by experimental literature. In this project, random rules are imposed to introduce chance elements between text and image, and based on this, participants explore visual language where meaning is expanded through randomness. Participants investigate the interaction between text and image, deriving creative results based on illustration by discovering their own relationships between text and image through the process.">《텍스트 & 이미지》는 실험문학에서 영감을 받은 이미지 실험 프로젝트이다. 이 프로젝트에서는 임의적인 규칙을 제시함으로써 텍스트와 이미지 사이에 우연적 요소를 가미하고, 이를 토대로 하여 참여자들은 우연성을 통해 의미가 확장되는 시각 언어를 탐구한다. 참여자는 텍스트와 이미지의 상호작용을 탐구하며, 자신만의 텍스트와 이미지 관계성을 찾아내는 과정을 통해서 일러스트레이션 기반의 창의적인 결과물을 도출해낸다.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-21" class="modal" aria-hidden="true" role="dialog" aria-label="project 21">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="The Blind Zone">불안은 언제나 여기에 있다</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/21.png" alt="project 21" />
+			<img src="img/21_sub1.png" alt="project 21" />
+			<img src="img/21_sub2.jpg" alt="project 21" />
+			<p data-en="The Blind Zone critically examines the origins of anxiety and tension underlying cultural abundance from a critical perspective and a value-neutral attitude. Issues such as student activism in the post-coronavirus era, social discrimination, the quest for true identity, the rupture of organic communication, cultural intertextuality, and personal archives are the large and small socio-cultural issues we face, which may be well known to us but at the same time, problems we have overlooked. Nevertheless, we still believe that design can play a role in bringing about changes in our lives.">《불안은 언제나 여기에 있다》는 문화적 풍요 이면에 존재하는 불안과 긴장의 근원을 비판적 시각과 가치 중립적 태도로 바라본다. 포스트 코로나 시대의 학생운동, 사회적 차별, 진짜 나를 찾는 일, 유기적 소통의 단절, 문화적 상호 텍스트성, 사적 아카이브 등 우리가 마주한 크고 작은 사회문화적 이슈는 어쩌면 우리 스스로 잘 알지만 동시에 외면했던 문제일지 모른다. 그럼에도 우리는 디자인이 우리 삶의 변화를 만드는 역할을 담당할 수 있다고 여전히 믿는다.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<div id="modal-22" class="modal" aria-hidden="true" role="dialog" aria-label="project 22">
+  <button class="modal-close" data-modal-close aria-label="닫기">✕</button>
+  <div class="modal_body">
+  	<div class="modal_title">
+  		<h1 data-en="The Blind Zone">불안은 언제나 여기에 있다</h1>
+  	</div>
+  	<div class="modal_container">
+	  	<div class="modal_category"></div>
+		<div class="modal_info">
+			<img src="img/23.jpg" alt="project 22" />
+			<img src="img/23_sub1.jpg" alt="project 22" />
+			<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/MxSuzQwids4?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=MxSuzQwids4" frameborder="0" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+			<p data-en="The Blind Zone critically examines the origins of anxiety and tension underlying cultural abundance from a critical perspective and a value-neutral attitude. Issues such as student activism in the post-coronavirus era, social discrimination, the quest for true identity, the rupture of organic communication, cultural intertextuality, and personal archives are the large and small socio-cultural issues we face, which may be well known to us but at the same time, problems we have overlooked. Nevertheless, we still believe that design can play a role in bringing about changes in our lives.">《불안은 언제나 여기에 있다》는 문화적 풍요 이면에 존재하는 불안과 긴장의 근원을 비판적 시각과 가치 중립적 태도로 바라본다. 포스트 코로나 시대의 학생운동, 사회적 차별, 진짜 나를 찾는 일, 유기적 소통의 단절, 문화적 상호 텍스트성, 사적 아카이브 등 우리가 마주한 크고 작은 사회문화적 이슈는 어쩌면 우리 스스로 잘 알지만 동시에 외면했던 문제일지 모른다. 그럼에도 우리는 디자인이 우리 삶의 변화를 만드는 역할을 담당할 수 있다고 여전히 믿는다.</p>
+		</div>
+	</div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const DEFAULT_LANG = "ko";
+  let currentLang = localStorage.getItem("lang") || DEFAULT_LANG;
+
+  const toggleButton = document.getElementById("lang");
+  const labelEl = toggleButton?.querySelector("h1") || null;
+
+  const translatables = Array.from(document.querySelectorAll("[data-en], [data-ko]"));
+
+  translatables.forEach(el => {
+	if (!el.dataset.ko) {
+	  el.dataset.ko = el.innerHTML.trim();
+	}
+  });
+
+  if (toggleButton && labelEl && !toggleButton.dataset.ko) {
+	toggleButton.dataset.ko = labelEl.textContent.trim();
+  }
+
+  function applyLang(lang) {
+	currentLang = lang;
+	localStorage.setItem("lang", lang);
+	document.documentElement.setAttribute("lang", lang);
+
+	if (toggleButton && labelEl) {
+	  const label = toggleButton.dataset[lang]
+		?? toggleButton.dataset[DEFAULT_LANG]
+		?? labelEl.textContent;
+	  labelEl.textContent = label;
+	}
+
+	translatables.forEach(el => {
+	  const next = el.dataset[lang]
+		?? el.dataset[DEFAULT_LANG]
+		?? el.dataset.ko
+		?? el.innerHTML;
+	  el.innerHTML = next;
+	});
+  }
+
+  applyLang(currentLang);
+
+  toggleButton?.addEventListener("click", () => {
+	applyLang(currentLang === "ko" ? "en" : "ko");
+  });
+});
+</script>
+<script>
+	var itemli = $('.category-title');
+
+	itemli.on('click', function (e) {
+	  e.stopPropagation();              
+	  $(this).toggleClass('on');
+	  itemli.not(this).removeClass('on');
+	});
+
+	$(document).on('click', function (e) {
+	  if ($(e.target).closest('.category').length === 0) {
+	    itemli.removeClass('on');
+	  }
+	});
+</script>
+<script>
+	const itemTab = document.querySelector('.work');
+	const itemEls = document.querySelectorAll('.grid-item');
+
+	itemTab.addEventListener('click', (e) => {
+	  const btn = e.target.closest('[data-filter]');
+	  if (!btn || !itemTab.contains(btn)) return;
+
+	  const wasActive = btn.classList.contains('is-active');
+
+	  if (wasActive) {
+	    btn.classList.remove('is-active');
+	    itemEls.forEach(el => { el.style.display = 'block'; });
+	    return;
+	  }
+
+	  const filter = String(btn.dataset.filter ?? '').trim();
+	  const showAll = filter === '' || filter === '*';
+
+	  itemTab.querySelectorAll('[data-filter].is-active')
+	    .forEach(el => el.classList.remove('is-active'));
+	  btn.classList.add('is-active');
+
+	  itemEls.forEach((el) => {
+	    const types = (el.dataset.type || '')
+	      .split(',')
+	      .map(s => s.trim())
+	      .filter(Boolean);
+
+	    const hit = types.includes(filter);
+	    el.style.display = (showAll || hit) ? 'block' : 'none';
+	  });
+	});
+
+	itemTab.addEventListener('keydown', (e) => {
+	  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-filter]')) {
+	    e.preventDefault();
+	    e.target.click();
+	  }
+	});
+</script>
+<script>
+(function() {
+  var anchors = Array.prototype.slice.call(document.querySelectorAll('.grid-item a[data-photo-id]'));
+  var modals  = new Map();
+
+
+  anchors.forEach(function(a) {
+    var id = a.getAttribute('data-photo-id');
+    var m = document.getElementById('modal-' + id);
+    if (m) modals.set(id, m);
+  });
+
+  function closeAll() {
+    modals.forEach(function(m) {
+      m.classList.remove('is-open');
+      m.setAttribute('aria-hidden', 'true');
+    });
+    document.body.style.overflow = '';
+  }
+
+  function openById(id, fromPopstate) {
+    closeAll();
+    var target = modals.get(String(id));
+    if (!target) return;
+
+    if (target.parentElement !== document.body) document.body.appendChild(target);
+    target.classList.add('is-open');
+    target.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (!fromPopstate) {
+      history.pushState({ photoId: id }, '', '/gallery/' + id);
+    }
+  }
+
+  function closeModal(fromPopstate) {
+    var wasOpen = false;
+    modals.forEach(function(m) { if (m.classList.contains('is-open')) wasOpen = true; });
+    closeAll();
+    if (!fromPopstate && wasOpen) {
+
+      if (/\/gallery\/[^/]+$/.test(location.pathname)) {
+        history.back();
+      }
+    }
+  }
+
+  function parsePhotoIdFromURL() {
+    var pathMatch = location.pathname.match(/\/gallery\/([^/]+)$/);
+    if (pathMatch) return pathMatch[1];
+    var sp = new URLSearchParams(location.search);
+    return sp.get('photoId');
+  }
+
+  anchors.forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = a.getAttribute('data-photo-id');
+      openById(id, false);
+    });
+  });
+
+  document.querySelectorAll('[data-modal-close]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeModal(false);
+    });
+  });
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal(false);
+  });
+
+  window.addEventListener('popstate', function() {
+    var pid = parsePhotoIdFromURL();
+    if (pid) openById(pid, true);
+    else closeModal(true);
+  });
+
+  var initial = parsePhotoIdFromURL();
+  if (initial) openById(initial, true);
+})();
+</script>
+<script>
+(() => {
+
+  const $$  = (sel, ctx=document) => Array.prototype.slice.call((ctx||document).querySelectorAll(sel));
+  const qs  = (sel, ctx=document) => (ctx||document).querySelector(sel);
+  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v); // MDN: CSS.escape
+  const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches; // MDN: matchMedia
+  const csv = (s) => String(s||'').split(',').map(x=>x.trim()).filter(Boolean);
+
+  const showEl = (el) => { el.hidden = false; el.style.display = ''; };
+  const hideEl = (el) => { el.hidden = true;  el.style.display = 'none'; };
+
+  const TITLE_TO_KEY = { 'Outcome':'type', 'Commissioner':'client', 'Affiliation':'affiliation', 'Year':'year' };
+
+  const initLang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+  $$('.category .category-title').forEach(title => {
+    const cat = title.closest('.category');                                        // MDN: closest
+    const en  = title?.dataset?.en || '';
+    if (cat) cat.dataset.filterKey = TITLE_TO_KEY[en] || 'type';
+
+    if (!title.dataset.baseKo) {
+      if (title.dataset.ko) title.dataset.baseKo = title.dataset.ko.trim();
+      else if (!initLang.startsWith('en')) title.dataset.baseKo = (title.textContent||'').trim();
+      else title.dataset.baseKo = '';
+    }
+    if (!title.dataset.baseEn) {
+      title.dataset.baseEn = (title.dataset.en || title.textContent || '').trim();
+    }
+  });
+
+  const getCurrentLang = () => {
+    const lang = (document.documentElement.getAttribute('lang')||'').toLowerCase();
+    return lang.startsWith('en') ? 'en' : 'ko';
+  };
+  const setTitleDefaultByLang = (titleEl) => {
+    const ko = (titleEl.dataset.baseKo || '').trim();
+    const en = (titleEl.dataset.baseEn || titleEl.dataset.en || '').trim();
+    titleEl.textContent = (getCurrentLang()==='en' ? (en||ko) : (ko||en));        // MDN: textContent
+  };
+
+  // --- NEW: 버튼에서 현재 언어에 맞는 라벨 얻기 (data-en / data-ko 우선)
+  function getLocalizedLabelFromButton(btn, fallbackText='') {
+    const lang = getCurrentLang();
+    const en = (btn?.dataset?.en || '').trim();
+    const ko = (btn?.dataset?.ko || '').trim();
+    const txt = (btn?.textContent || '').trim();
+    if (lang === 'en') return en || txt || fallbackText;
+    return ko || txt || fallbackText;
+  }
+
+  function buildKeyTokenSets() {
+    const sets = { type:new Set(), client:new Set(), affiliation:new Set(), year:new Set() };
+    $$('.category').forEach(cat => {
+      const key = cat.dataset.filterKey || 'type';
+      $$('.sub-items[data-filter]', cat).forEach(btn => {
+        csv(btn.dataset.filter).forEach(tok => sets[key].add(tok));
+      });
+    });
+    return sets;
+  }
+  const KEY_TOKENS = buildKeyTokenSets();
+  window.KEY_TOKENS = KEY_TOKENS; 
+
+  function getItemMeta(item) {
+    const rawType = csv(item?.dataset?.type);
+
+    const meta = {
+      type:        Array.from(new Set(csv(item?.dataset?.type))),
+      client:      Array.from(new Set(csv(item?.dataset?.client))),
+      affiliation: Array.from(new Set(csv(item?.dataset?.affiliation))),
+      year:        Array.from(new Set(csv(item?.dataset?.year))),
+    };
+
+    rawType.forEach(tok => {
+      const t = String(tok);
+      const isYear = /^\d{4}$/.test(t);
+      if (KEY_TOKENS.client.has(t))            meta.client.push(t);
+      else if (KEY_TOKENS.affiliation.has(t))  meta.affiliation.push(t);
+      else if (KEY_TOKENS.year.has(t) || isYear) meta.year.push(t);
+
+    });
+
+    meta.type        = Array.from(new Set(meta.type));
+    meta.client      = Array.from(new Set(meta.client));
+    meta.affiliation = Array.from(new Set(meta.affiliation));
+    meta.year        = Array.from(new Set(meta.year));
+    return meta;
+  }
+
+  function applyFilter(value, opts={}) {
+    const key = opts.key || 'type';                  
+    const tokens  = csv(value);
+    const showAll = tokens.length === 0 || tokens.includes('*') || tokens.map(v=>v.toLowerCase()).includes('all');
+
+    const items = $$('.grid-item');
+    if (showAll) {
+      items.forEach(showEl);
+    } else {
+      items.forEach(el => {
+        const list = (getItemMeta(el)[key] || []);
+        const hit  = tokens.some(tok => list.includes(tok));
+        hit ? showEl(el) : hideEl(el);
+      });
+    }
+  }
+  window.applyFilter = applyFilter;
+
+  function findCategoryTitleFor(btn, key) {
+    if (key) {
+      const byKey = qs(`.category[data-filter-key="${esc(key)}"]`);
+      if (byKey) return qs('.category-title', byKey);
+    }
+    const cat = btn.closest('.category');
+    if (cat) return qs('.category-title', cat);
+    const openTitle = qs('.category-title.on');
+    if (openTitle) return openTitle;
+    if (key === 'type') return qs('.category-title[data-en="Outcome"]');
+    return null;
+  }
+
+  function resetOtherCategoryTitles(exceptCat) {
+    $$('.category .category-title').forEach(t => {
+      if (exceptCat && t.closest('.category') === exceptCat) return;
+      setTitleDefaultByLang(t);
+      t.classList.remove('has-selection');
+    });
+  }
+
+  function updateDesktopCategoryTitleFrom(btn, key, label) {
+    if (!isDesktop()) return;                                     
+    const title = findCategoryTitleFor(btn, key);
+    if (!title) return;
+    const myCat = title.closest('.category');
+    resetOtherCategoryTitles(myCat);
+    if (label) {
+      title.textContent = label;                                  
+      title.classList.add('has-selection');
+    } else {
+      setTitleDefaultByLang(title);
+    }
+  }
+
+  function ensureMobileLine() {
+    let host = qs('.category_pannel');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'category_pannel';
+      const anchor = qs('.nav-menu-wrapper') || qs('nav') || document.body.firstElementChild || document.body;
+      anchor.insertAdjacentElement ? anchor.insertAdjacentElement('afterend', host)
+                                   : anchor.parentNode.insertBefore(host, anchor.nextSibling);
+    }
+    let line = qs('#mobile-filter-line', host);
+    if (!line) {
+      line = document.createElement('div');
+      line.id = 'mobile-filter-line';
+      line.className = 'filter-selected-line';
+      line.setAttribute('role','status'); line.setAttribute('aria-live','polite');
+      host.insertAdjacentElement('afterbegin', line);
+    }
+    return line;
+  }
+  function updateMobileLine(label) {
+    if (isDesktop()) return;
+    const line = ensureMobileLine();
+    line.textContent = label || '';              
+    line.style.display = label ? '' : 'none';
+  }
+
+  function guessKeyForButton(btn) {
+    const cat = btn.closest('.category');                         
+    if (cat && cat.dataset.filterKey) return cat.dataset.filterKey;
+
+    const tokens = csv(btn.dataset.filter);
+    const decide = (t) => {
+      if (KEY_TOKENS.type.has(t))        return 'type';
+      if (KEY_TOKENS.client.has(t))      return 'client';
+      if (KEY_TOKENS.affiliation.has(t)) return 'affiliation';
+      if (KEY_TOKENS.year.has(t) || /^\d{4}$/.test(t)) return 'year';
+      return null;
+    };
+    const list = tokens.map(decide).filter(Boolean);
+    if (list.length && list.every(k => k === list[0])) return list[0];
+    if (tokens.some(t => /^\d{4}$/.test(t))) return 'year';
+    return 'type'; 
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.work [data-filter], .category [data-filter]');
+    if (!btn || btn.closest('.modal')) return;
+    e.preventDefault();
+
+    const value = String(btn.dataset.filter || '').trim();       
+    const label = getLocalizedLabelFromButton(btn, (btn.textContent||'').trim()); // ★ 변경: 현재 언어의 라벨 사용
+    const key   = guessKeyForButton(btn);                         
+
+    const workRoot = btn.closest('.work') || document;
+    $$('.sub-items[data-filter].is-active', workRoot).forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-pressed','false'); });
+    btn.classList.add('is-active'); btn.setAttribute('aria-pressed','true');
+
+    applyFilter(value, { key, originButton: btn });
+
+    if (isDesktop()) updateDesktopCategoryTitleFrom(btn, key, label);
+    else updateMobileLine(label);
+
+    const closeUI = () => {
+      $$('.category-title.on').forEach(t => t.classList.remove('on'));
+      const navMenu = qs('.nav-menu-wrapper .nav-menu');
+      const wrapper = qs('.nav-menu-wrapper');
+      const menuItems = qs('.menu-items');
+      if (navMenu && navMenu.classList.contains('menu-trigger-open') && wrapper) {
+        wrapper.click();
+        if (menuItems && getComputedStyle(menuItems).display !== 'none') menuItems.style.display = 'none';
+      }
+    };
+    requestAnimationFrame(closeUI);
+  });
+
+  (function mountModalTypeButtons() {
+    const anchors = $$('.grid-item a[data-photo-id]');
+    anchors.forEach(a => {
+      const id = a.getAttribute('data-photo-id');
+      const item = a.closest('.grid-item');
+      const modal = qs(`#modal-${esc(id)}`);
+      if (!modal || !item) return;
+
+      const types = (getItemMeta(item).type || []).filter(Boolean);
+      if (!types.length) return;
+
+      const info = qs('.modal_category', modal) || modal;
+      $$('.data-type[data-filter]', info).forEach(b => b.remove()); 
+
+      types.forEach(t => {
+        // 카탈로그(메뉴)에서 동일 토큰의 원 버튼을 찾아 데이터 라벨 가져오기
+        const menuBtn = qs(`.category[data-filter-key="type"] [data-filter="${esc(t)}"]`) || qs(`.work [data-filter="${esc(t)}"]`);
+        const label_en = (menuBtn?.dataset?.en || t).trim();                  // ★ EN 라벨
+        const label_ko = (menuBtn?.dataset?.ko || menuBtn?.textContent || t).trim(); // ★ KO 라벨
+        const label_now = (getCurrentLang()==='en' ? label_en : label_ko);    // ★ 현재 언어로 표시
+
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'data-type';
+        b.setAttribute('data-filter', t);
+        // 모달 버튼에도 다국어 데이터 보존
+        b.dataset.en = label_en;
+        b.dataset.ko = label_ko;
+
+        // 접근성 라벨도 현재 언어로
+        b.setAttribute('aria-label', (getCurrentLang()==='en' ? `Filter: ${label_en}` : `필터: ${label_ko}`));
+        b.textContent = label_now;
+        info.appendChild(b);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.modal .data-type[data-filter]');
+      if (!btn) return;
+      e.preventDefault();
+
+      const v = String(btn.dataset.filter||'').trim();
+      if (!v) return;
+
+      applyFilter(v, { key: 'type' }); // ★ type으로 강제 적용
+
+      // 데스크탑 타이틀 갱신 시에도 현재 언어 라벨 사용
+      const label = getLocalizedLabelFromButton(btn, (btn.textContent||'').trim());
+      if (isDesktop()) updateDesktopCategoryTitleFrom(btn, 'type', label);
+
+      const closeBtn = qs('.modal.is-open [data-modal-close]');
+      if (closeBtn) closeBtn.click();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.key==='Enter'||e.key===' ') && e.target.matches('.modal .data-type[data-filter]')) {
+        e.preventDefault(); e.target.click();
+      }
+    });
+  })();
+})();
+</script>
+
+</body>
+</html>
