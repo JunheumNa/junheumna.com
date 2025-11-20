@@ -255,7 +255,7 @@ a {
   top: 50px;
   left: 0;
   width: 100vw;
-  height: calc(100vh - (var(--chart-height) + 5px));
+  height: calc(100dvh - (var(--chart-height) + 5px));
   padding-top: 10px;
   overflow: auto;
 }
@@ -302,7 +302,7 @@ img {
 
 .modal_body {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: grid;
   gap: 20px;
   align-items: center;
@@ -325,7 +325,7 @@ img {
 
 .modal_container {
   top: 50px;
-  height: calc(100vh - 50px);
+  height: calc(100dvh - 50px);
   width: calc(100vw - 40px);
   position: absolute;
   margin: 0 20px 0 20px;
@@ -346,7 +346,7 @@ img {
 
 .modal_info img {
   display: block;
-  max-height: calc(100vh - 185px);
+  max-height: calc(100dvh - 185px);
   max-width: calc(100vw - 40px);
 }
 
