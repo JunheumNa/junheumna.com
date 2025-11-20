@@ -32,6 +32,11 @@ body {
 	line-height: 1;
 }
 
+html, body {
+	height: 100vh;
+  height: 100dvh;
+}
+
 ol, ul {
 	list-style: none;
 }
