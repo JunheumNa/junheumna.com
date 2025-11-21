@@ -489,8 +489,3 @@ img {
     width: 50vw;
   }
 }
-
-.section, .grid, .gallery, .work {
-  content-visibility: auto; /* 비가시 영역의 렌더링을 스킵 */
-  contain-intrinsic-size: 1000px 800px; /* 예비 크기(원하는 값으로 조정) */
-}
