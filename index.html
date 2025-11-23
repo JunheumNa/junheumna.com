@@ -10,9 +10,6 @@
 		  $('.nav-menu-wrapper').on('click.mobileNav', function(){
 			$('.nav-menu-wrapper .nav-menu').toggleClass('menu-trigger-open');
 			$('.menu-items').toggle(); 
-			/*
-			$('.nav-title, .nav-language').toggle();
-			*/
 		  });
 		});
 	</script>
@@ -1297,7 +1294,7 @@
   	<div class="modal_container">
 	  	<div class="modal_category"></div>
 		<div class="modal_info">
-	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/p1rSCStaApE?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=miQLXS6LfbE" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/p1rSCStaApE?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=p1rSCStaApE" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
 	</div>
   </div>
 </div>
@@ -1377,7 +1374,7 @@
 	  	<div class="modal_category"></div>
 		<div class="modal_info">
 	    	<img src="img/55.jpg" alt="project 54" loading="lazy" />
-	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/D8_mmFKDetI?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=miQLXS6LfbE" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+	    	<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/D8_mmFKDetI?autoplay=1&mute=1&controls=0&vq=hd1080&loop=1&playlist=D8_mmFKDetI" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
 	    	<p data-en="The Daekyo International Sculpture Symposium is an arts sponsorship program that discovers emerging sculptural artists each year through its residency program. Guided by the subtitle “Gaps and Reveries,” the key visual features an object whose form grows while holding a gap within it.">대교국제조형심포지엄은 매년 레지던시 프로그램을 통해 조형예술분야 신예작가를 발굴하는 예술후원사업이다. ‘빈틈과 몽상’이라는 부제에 따라, 빈틈을 품고 자라나는 형태의 오브제를 키비주얼로 삼았다.</p>
 	</div>
   </div>
@@ -1551,7 +1548,7 @@
   	<div class="modal_container">
 	  	<div class="modal_category"></div>
 		<div class="modal_info">
-			<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/https://www.youtube.com/embed/SiXbBIX5kRE?start=129?autoplay=1&mute=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
+			<div class="video-container"> <iframe class="video" src="https://www.youtube.com/embed/SiXbBIX5kRE?start=129?autoplay=1&mute=1&controls=0&vq=hd1080" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>
 	</div>
   </div>
 </div>
@@ -1985,19 +1982,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const $$  = (sel, ctx=document) => Array.prototype.slice.call((ctx||document).querySelectorAll(sel));
   const qs  = (sel, ctx=document) => (ctx||document).querySelector(sel);
-  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v); // MDN: CSS.escape :contentReference[oaicite:1]{index=1}
-  const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches; // MDN: matchMedia :contentReference[oaicite:2]{index=2}
+  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v); 
+  const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches; 
   const csv = (s) => String(s||'').split(',').map(x=>x.trim()).filter(Boolean);
   const norm = (s) => String(s||'').trim();
 
-  const showEl = (el) => { el.hidden = false; el.style.display = ''; }; // MDN: hidden :contentReference[oaicite:3]{index=3}
+  const showEl = (el) => { el.hidden = false; el.style.display = ''; }; 
   const hideEl = (el) => { el.hidden = true;  el.style.display = 'none'; };
 
   const TITLE_TO_KEY = { 'Outcome':'type', 'Commissioner':'client', 'Affiliation':'affiliation', 'Year':'year' };
 
   const initLang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
   $$('.category .category-title').forEach(title => {
-    const cat = title.closest('.category');                                        // MDN: closest :contentReference[oaicite:4]{index=4}
+    const cat = title.closest('.category');                                       
     const en  = title?.dataset?.en || '';
     if (cat) cat.dataset.filterKey = TITLE_TO_KEY[en] || 'type';
 
@@ -2021,7 +2018,6 @@ document.addEventListener("DOMContentLoaded", () => {
     titleEl.textContent = (getCurrentLang()==='en' ? (en||ko) : (ko||en));
   };
 
-  // 현재 언어에 맞는 버튼 라벨
   function getLocalizedLabelFromButton(btn, fallbackText='') {
     const lang = getCurrentLang();
     const en = (btn?.dataset?.en || '').trim();
@@ -2031,7 +2027,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return ko || txt || fallbackText;
   }
 
-  // 메뉴로부터 키별 토큰 집합 수집
   function buildKeyTokenSets() {
     const sets = { type:new Set(), client:new Set(), affiliation:new Set(), year:new Set() };
     $$('.category').forEach(cat => {
@@ -2045,14 +2040,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const KEY_TOKENS = buildKeyTokenSets();
   window.KEY_TOKENS = KEY_TOKENS;
 
-  // ===== 배타적 분류: 한 토큰이 여러 키로 중복되지 않도록 보정 =====
   function getItemMeta(item) {
     const typeSet        = new Set(csv(item?.dataset?.type).map(norm));
     const clientSet      = new Set(csv(item?.dataset?.client).map(norm));
     const affiliationSet = new Set(csv(item?.dataset?.affiliation).map(norm));
     const yearSet        = new Set(csv(item?.dataset?.year).map(norm));
 
-    // data-type에 섞인 토큰을 “연도 > 의뢰/주최 > 소속 > 결과물” 우선순위로 승격 후 type에서 제거
     const claimed = new Set();
     Array.from(typeSet).forEach(tokRaw => {
       const t = norm(tokRaw);
@@ -2067,7 +2060,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (KEY_TOKENS.affiliation && KEY_TOKENS.affiliation.has(t)) {
         affiliationSet.add(t); typeSet.delete(t); claimed.add(t); return;
       }
-      // 나머지는 type 유지
     });
 
     return {
@@ -2078,7 +2070,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // ===== 필터 적용 =====
   function applyFilter(value, opts={}) {
     const key = opts.key || 'type';
     const tokens  = csv(value).map(norm);
@@ -2097,15 +2088,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   window.applyFilter = applyFilter;
 
-  // ===== 데스크톱: key로 정확히 타이틀 갱신(왼쪽 첫 카테고리 오동작 방지) =====
   function updateDesktopCategoryTitleByKey(key, label) {
-    if (!isDesktop()) return; // MDN: matchMedia :contentReference[oaicite:5]{index=5}
+    if (!isDesktop()) return; 
     const cat = qs(`.category[data-filter-key="${esc(key)}"]`);
     if (!cat) return;
     const title = qs('.category-title', cat);
     if (!title) return;
 
-    // 나머지 카테고리 초기화
     $$('.category .category-title').forEach(t => {
       if (t === title) return;
       setTitleDefaultByLang(t);
@@ -2120,7 +2109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== 모바일 보조 라인 (기존 유지) =====
   function ensureMobileLine() {
     let host = qs('.category_pannel');
     if (!host) {
@@ -2147,7 +2135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     line.style.display = label ? '' : 'none';
   }
 
-  // ===== 일반 메뉴 버튼 클릭(기존 로직 유지) =====
   function guessKeyForButton(btn) {
     const cat = btn.closest('.category');
     if (cat && cat.dataset.filterKey) return cat.dataset.filterKey;
@@ -2167,8 +2154,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.work [data-filter], .category [data-filter]'); // MDN: closest :contentReference[oaicite:6]{index=6}
-    if (!btn || btn.closest('.modal')) return; // 모달 내부는 아래 핸들러에서 처리
+    const btn = e.target.closest('.work [data-filter], .category [data-filter]'); 
+    if (!btn || btn.closest('.modal')) return; 
     e.preventDefault();
 
     const value = norm(btn.dataset.filter);
@@ -2184,8 +2171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isDesktop()) updateDesktopCategoryTitleByKey(key, label);
     else updateMobileLine(label);
 
-    // 메뉴 패널/오버레이 닫기
-    requestAnimationFrame(() => { // MDN: rAF :contentReference[oaicite:7]{index=7}
+    requestAnimationFrame(() => { 
       $$('.category-title.on').forEach(t => t.classList.remove('on'));
       const navMenu = qs('.nav-menu-wrapper .nav-menu');
       const wrapper = qs('.nav-menu-wrapper');
@@ -2197,7 +2183,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== 모달: 키별 버튼 생성 (중복 방지) =====
   (function mountModalTypeButtons() {
     const anchors = $$('.grid-item a[data-photo-id]');
     anchors.forEach(a => {
@@ -2209,13 +2194,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const meta = getItemMeta(item);
       const info = qs('.modal_category', modal) || modal;
 
-      // 1) 기존 버튼 제거(누적 방지)
       $$('.data-type[data-filter]', info).forEach(b => b.remove());
 
-      // 2) 모달 전체에서 key::token 중복 방지
       const added = new Set();
 
-      // 3) 표시 순서(원하는 순서로 조정 가능)
       const entries = [
         ['type',        meta.type || []],
         ['client',      meta.client || []],
@@ -2230,7 +2212,6 @@ document.addEventListener("DOMContentLoaded", () => {
           if (added.has(sig)) return;
           added.add(sig);
 
-          // 메뉴에서 동일 키/토큰 버튼을 찾아 다국어 라벨 확보
           const menuBtn =
             qs(`.category[data-filter-key="${esc(key)}"] [data-filter="${esc(tok)}"]`) ||
             qs(`.work [data-filter="${esc(tok)}"]`);
@@ -2242,7 +2223,7 @@ document.addEventListener("DOMContentLoaded", () => {
           b.type = 'button';
           b.className = 'data-type';
           b.setAttribute('data-filter', tok);
-          b.setAttribute('data-key', key); // ★ 어떤 카테고리 토큰인지 명시 (중요)
+          b.setAttribute('data-key', key); 
           b.dataset.en = label_en;
           b.dataset.ko = label_ko;
           b.setAttribute('aria-label', (getCurrentLang()==='en' ? `Filter: ${label_en}` : `필터: ${label_ko}`));
@@ -2252,26 +2233,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // 모달 내부 버튼 클릭 → 해당 key만 타이틀 갱신(왼쪽 첫 카테고리 오동작 방지) + 중복 생성 없음
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.modal .data-type[data-filter]');
       if (!btn) return;
       e.preventDefault();
 
       const v   = norm(btn.dataset.filter);
-      const key = norm(btn.dataset.key) || 'type'; // ★ 모달 버튼이 가진 실제 key 사용
+      const key = norm(btn.dataset.key) || 'type'; 
       if (!v) return;
 
-      applyFilter(v, { key }); // 해당 key로 필터 적용
+      applyFilter(v, { key }); 
       const label = getLocalizedLabelFromButton(btn, (btn.textContent||'').trim());
 
-      if (isDesktop()) updateDesktopCategoryTitleByKey(key, label); // ★ 정확한 카테고리만 갱신
+      if (isDesktop()) updateDesktopCategoryTitleByKey(key, label); 
 
       const closeBtn = qs('.modal.is-open [data-modal-close]');
       if (closeBtn) closeBtn.click();
     });
 
-    // 접근성: 키보드 활성화
     document.addEventListener('keydown', (e) => {
       if ((e.key==='Enter'||e.key===' ') && e.target.matches('.modal .data-type[data-filter]')) {
         e.preventDefault(); e.target.click();
@@ -2283,7 +2262,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <script>
 (function() {
-  // When a grid thumbnail is clicked, populate modal images' src from data-src.
   document.addEventListener('click', function(e) {
     var a = e.target.closest('.grid-item a[data-photo-id]');
     if (!a) return;

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="refresh" content="0; url=/" />
+  <title>Redirecting…</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      $('.nav-menu-wrapper').on('click.mobileNav', function(){
+      $('.nav-menu-wrapper .nav-menu').toggleClass('menu-trigger-open');
+      $('.menu-items').toggle(); 
+      });
+    });
+  </script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .loading {
+      display: flex; align-items: center; justify-content: center; height:100vh;}
+  </style>
+</head>
+<body>
+  <div class="loading">
+    <p>Loading...</p>
+  </div>
+
+  <script>
+    (function () {
+      var path = window.location.pathname || "";
+      var m = path.match(/\/gallery\/([^/]+)$/); // 35-2 같은 id도 지원
+      var dest = "/";
+
+      if (m && m[1]) {
+        var pid = m[1];
+        dest = "/?photoId=" + encodeURIComponent(pid);
+      } else {
+        dest = "/";
+      }
+
+      window.location.replace(dest);
+    })();
+  </script>
+</body>
+</html>
