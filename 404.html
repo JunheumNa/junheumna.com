@@ -5,20 +5,20 @@
   <meta http-equiv="refresh" content="0; url=/" />
   <title>Redirecting…</title>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script type="text/javascript">
-    $(function() {
-      $('.nav-menu-wrapper').on('click.mobileNav', function(){
-      $('.nav-menu-wrapper .nav-menu').toggleClass('menu-trigger-open');
-      $('.menu-items').toggle(); 
-      });
-    });
-  </script>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable.css" />
   <style>
+    body { background-color: black; }
     .loading {
-      display: flex; align-items: center; justify-content: center; height:100vh;}
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      height:100vh; 
+      color: white; 
+      font-size: 18px; 
+      font-family:
+      "Pretendard Variable", Pretendard, "Segoe UI Symbol", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+      font-weight: 250;
+    }
   </style>
 </head>
 <body>
@@ -29,7 +29,7 @@
   <script>
     (function () {
       var path = window.location.pathname || "";
-      var m = path.match(/\/gallery\/([^/]+)$/); // 35-2 같은 id도 지원
+      var m = path.match(/\/gallery\/([^/]+)$/);
       var dest = "/";
 
       if (m && m[1]) {
