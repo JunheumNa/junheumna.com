@@ -1,43 +1,109 @@
-/* modal-router-fixed.js
- * Fix deep-link modal routing and history so closing a modal always returns to '/' cleanly.
- * - Opening a grid item pushes '/gallery/{id}'.
- * - On hard-refresh of '/gallery/{id}', 404.html should redirect to '/?photoId={id}' via replaceState.
- *   This script reads that param and opens the modal.
- * - Closing via the 'X' button (or Escape) cleans URL to '/' using history.replaceState, avoiding
- *   getting stuck on '/?photoId=...'. See: MDN History.replaceState.
- */
 (function () {
-  // Utility
-  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
-  function qsa(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+  'use strict';
 
-  // Collect anchors and matching modals
-  var anchors = qsa('.grid-item a[data-photo-id]');
-  var modals = new Map();
-  anchors.forEach(function (a) {
-    var id = a.getAttribute('data-photo-id');
-    var m = document.getElementById('modal-' + id);
-    if (m) modals.set(String(id), m);
+  const $$ = (sel, ctx = document) => Array.prototype.slice.call(ctx.querySelectorAll(sel));
+  const qs = (sel, ctx = document) => (ctx || document).querySelector(sel);
+
+  const isString = (v) => typeof v === 'string';
+  const escId = (v) => String(v).replace(/[^\w\-\.:]/g, '');
+
+  function baseURL() {
+    const url = new URL(window.location.href);
+    url.pathname = '/';
+    url.searchParams.delete('photoId');
+    return url.pathname + (url.search ? url.search : '');
+  }
+
+  const anchorEls = $$('.grid-item a[data-photo-id]');
+  const MODALS = new Map(); 
+
+  anchorEls.forEach(a => {
+    const id = a.getAttribute('data-photo-id');
+    const m = qs('#modal-' + escId(id));
+    if (m) MODALS.set(String(id), m);
   });
 
   function anyOpen() {
-    var open = null;
-    modals.forEach(function (m, id) { if (m.classList.contains('is-open')) open = id; });
+    let open = null;
+    MODALS.forEach(m => { if (m.classList.contains('is-open')) open = m; });
     return open;
   }
 
-  function closeAllModals() {
-    modals.forEach(function (m) {
-      m.classList.remove('is-open');
-      m.setAttribute('aria-hidden', 'true');
+  function stopIframes(scope) {
+    $$('iframe', scope).forEach((f) => {
+      try {
+        f.contentWindow?.postMessage?.(
+          JSON.stringify({ event: 'command', func: 'stopVideo', args: [] }),
+          '*'
+        );
+      } catch (_) { /* noop */ }
+
+      const src = f.getAttribute('src');
+      if (src) {
+        f.dataset._prevSrc = src;
+        f.removeAttribute('src');
+      }
     });
-    document.body.style.overflow = '';
   }
 
-  function openById(id, fromPopstate) {
-    closeAllModals();
-    var target = modals.get(String(id));
+  function resumeIframes(scope) {
+    $$('iframe', scope).forEach((f) => {
+      const prev = f.dataset._prevSrc;
+      if (prev && !f.getAttribute('src')) {
+        f.setAttribute('src', prev);
+        delete f.dataset._prevSrc;
+      }
+    });
+  }
+
+  function ensureLazyImages(scope) {
+    $$('img', scope).forEach(img => {
+      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+      if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+
+      if (!img.dataset.src && img.src) {
+        img.dataset.src = img.src;
+        img.removeAttribute('src');
+      }
+    });
+  }
+
+  function hydrateVisibleImages(scope) {
+    $$('img[data-src]', scope).forEach(img => {
+      if (!img.getAttribute('src')) {
+        img.setAttribute('src', img.dataset.src);
+      }
+    });
+  }
+
+  let IN_POPSTATE = false;      
+  let PROGRAMMATIC = false;     
+  let CURRENT_ID = null;      
+
+  function closeAll() {
+    const opened = anyOpen();
+    if (!opened) return;
+
+    stopIframes(opened);        
+    opened.classList.remove('is-open');
+    opened.setAttribute('aria-hidden', 'true');
+
+    document.body.style.overflow = '';
+    CURRENT_ID = null;
+  }
+
+  function openById(id, fromPopstate = false) {
+    const target = MODALS.get(String(id));
     if (!target) return;
+
+    const opened = anyOpen();
+    if (opened === target) return; 
+
+    if (opened) closeAll();
+
+    ensureLazyImages(target);
+    hydrateVisibleImages(target);
+    resumeIframes(target);
 
     if (target.parentElement !== document.body) {
       document.body.appendChild(target);
@@ -46,74 +112,91 @@
     target.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // When user opens by clicking, reflect deep link
+    CURRENT_ID = String(id);
+
     if (!fromPopstate) {
-      // Use pushState so Back key goes to the previous page (or '/')
-      window.history.pushState({ photoId: id }, '', '/gallery/' + id);
+      const url = new URL(window.location.href);
+      const nextPath = `/gallery/${encodeURIComponent(String(id))}`;
+      if (url.pathname !== nextPath) {
+        PROGRAMMATIC = true;
+        history.pushState({ photoId: String(id) }, '', nextPath);
+        PROGRAMMATIC = false;
+      }
     }
   }
 
-  function cleanToRoot() {
-    // Always replace the current entry with '/' so that we don't resurrect '?photoId=..' entries.
-    // This avoids getting stuck on previously redirected states.
-    window.history.replaceState({}, '', '/');
-  }
+  function closeModal(fromPopstate = false) {
+    if (!anyOpen()) return;
 
-  function closeCurrentModal(fromPopstate) {
-    var hadOpen = !!anyOpen();
-    closeAllModals();
+    closeAll();
 
-    // If user pressed Back (we're in a popstate unwind), do nothing else with history.
-    if (fromPopstate) return;
-
-    // If user clicked 'X' or pressed Escape, normalize URL to '/'
-    // instead of history.back() to prevent returning to '?photoId=..' states.
-    if (hadOpen) {
-      cleanToRoot();
+    if (!fromPopstate) {
+      const base = baseURL();
+      if ((window.location.pathname + window.location.search) !== base) {
+        PROGRAMMATIC = true;
+        history.replaceState(null, '', base);
+        PROGRAMMATIC = false;
+      }
     }
   }
 
-  function parsePhotoIdFromURL() {
-    // Support '/gallery/{id}' (if served directly with a static fallback) or '?photoId={id}' (after 404 redirect)
-    var pathMatch = window.location.pathname.match(/\/gallery\/([^/]+)$/);
-    if (pathMatch) return pathMatch[1];
-    var sp = new URLSearchParams(window.location.search);
-    return sp.get('photoId');
+  anchorEls.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('data-photo-id');
+      if (!id) return;
+      openById(id, /*fromPopstate*/ false);
+    }, { passive: false });
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-modal-close]');
+    if (!btn) return;
+    e.preventDefault();
+    closeModal(false);
+  }, { passive: false });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeModal(false);
+    }
+  });
+
+  window.addEventListener('popstate', () => {
+    if (PROGRAMMATIC || IN_POPSTATE) return;
+    IN_POPSTATE = true;
+
+    try {
+      const st = history.state;
+      const pid = st && st.photoId ? String(st.photoId) : null;
+      if (pid) {
+        openById(pid, /*fromPopstate*/ true);
+      } else {
+        closeModal(true);
+      }
+    } finally {
+      IN_POPSTATE = false;
+    }
+  });
+
+  function parseInitialPhotoId() {
+    const m = window.location.pathname.match(/\/gallery\/([^/]+)$/);
+    if (m) return decodeURIComponent(m[1]);
+
+    const sp = new URLSearchParams(window.location.search);
+    const q = sp.get('photoId');
+    return q ? String(q) : null;
   }
 
-  // Wire up grid anchors
-  anchors.forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      var id = a.getAttribute('data-photo-id');
-      openById(id, false);
-    });
-  });
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
 
-  // Close buttons
-  qsa('[data-modal-close]').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      closeCurrentModal(false);
-    });
-  });
-
-  // Esc key to close
-  window.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeCurrentModal(false);
-  });
-
-  // Handle back/forward
-  window.addEventListener('popstate', function () {
-    var pid = parsePhotoIdFromURL();
-    if (pid) openById(pid, true);
-    else closeCurrentModal(true);
-  });
-
-  // Initial deep link
-  var initial = parsePhotoIdFromURL();
-  if (initial) {
-    // Open without pushing; URL already represents deep-link
-    openById(initial, true);
+  const initial = parseInitialPhotoId();
+  if (initial && MODALS.has(String(initial))) {
+    openById(initial, /*fromPopstate*/ true);
+  } else {
+    history.replaceState(null, '', baseURL());
   }
 })();
