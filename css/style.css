@@ -303,8 +303,6 @@ img {
 .modal_body {
   width: 100vw;
   height: 100dvh;
-  display: grid;
-  gap: 20px;
   align-items: center;
   justify-content: center;
   overflow: auto;
@@ -312,22 +310,30 @@ img {
 
 .modal_title{
   width: calc(100vw - 40px);
-  height: var(--chart-height);
-  position: fixed;
+  height: auto;
+  position: sticky;
   top: 0;
   left: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 5px 20px 0 20px;
+  padding: 8.5px 0 8.5px 0;
   border-bottom: var(--stroke-weight) solid var(--text-color-select);
+  background-color: var(--background-color);
+  z-index: 999;
+}
+
+.modal_title h1 {
+  width: calc(100vw - 70px);
+  height: auto;
 }
 
 .modal_container {
-  top: 50px;
-  height: calc(100dvh - 50px);
+  top: 0;
+  height: auto;
   width: calc(100vw - 40px);
-  position: absolute;
+  position: relative;
   margin: 0 20px 0 20px;
   overflow: auto;
 }
