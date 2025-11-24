@@ -1,238 +1,226 @@
-(function () {
-  'use strict';
+/* modal-router-fixed.js
+   - 모바일 안정화(메모리 폭주 방지): 모달 내부 미디어 지연 복원/해제
+   - 히스토리 루프 가드(초기/프로그램틱/팝스테이트 플래그)
+   - 모바일(<800px)에서 모달 내 data-type 클릭 시 mobile-filter-line 즉시 갱신
+*/
 
-  const $$ = (sel, ctx = document) => Array.prototype.slice.call((ctx || document).querySelectorAll(sel));
-  const qs = (sel, ctx = document) => (ctx || document).querySelector(sel);
-  const escId = (v) => String(v).replace(/[^\w\-\.:]/g, '');
+(() => {
+  // ===== 유틸 =====
+  const $  = (sel, ctx=document) => (ctx||document).querySelector(sel);
+  const $$ = (sel, ctx=document) => Array.prototype.slice.call((ctx||document).querySelectorAll(sel));
+  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v);
+  const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches;
 
-  // ---- URL helpers ---------------------------------------------------------
-  function baseURL() {
-    const url = new URL(window.location.href);
-    url.pathname = '/';
-    url.searchParams.delete('photoId');
-    return url.pathname + (url.search ? url.search : '');
+  const DEFAULT_LANG = 'ko';
+  const getCurrentLang = () => {
+    const lang = (document.documentElement.getAttribute('lang')||'').toLowerCase();
+    return lang.startsWith('en') ? 'en' : 'ko';
+  };
+  const getLocalizedLabelFromButton = (btn, fallback='') => {
+    const lang = getCurrentLang();
+    const en = (btn?.dataset?.en || '').trim();
+    const ko = (btn?.dataset?.ko || '').trim();
+    const txt = (btn?.textContent || '').trim();
+    return (lang==='en') ? (en || txt || fallback) : (ko || txt || fallback);
+  };
+
+  // ===== mobile-filter-line 제어(다른 스크립트에 의존하지 않고 자체 처리) =====
+  function ensureMobileLine() {
+    let host = $('.category_pannel');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'category_pannel';
+      const anchor = $('.nav-menu-wrapper') || $('nav') || document.body.firstElementChild || document.body;
+      if (anchor.insertAdjacentElement) anchor.insertAdjacentElement('afterend', host);
+      else anchor.parentNode.insertBefore(host, anchor.nextSibling);
+    }
+    let line = $('#mobile-filter-line', host);
+    if (!line) {
+      line = document.createElement('div');
+      line.id = 'mobile-filter-line';
+      line.className = 'filter-selected-line';
+      line.setAttribute('role','status');
+      line.setAttribute('aria-live','polite');
+      host.insertAdjacentElement('afterbegin', line);
+    }
+    return line;
+  }
+  function updateMobileLine(label) {
+    if (isDesktop()) return;
+    const line = ensureMobileLine();
+    line.textContent = label || '';
+    line.style.display = label ? '' : 'none';
   }
 
-  // ---- Collections ---------------------------------------------------------
-  const anchorEls = $$('.grid-item a[data-photo-id]');
-  const MODALS = new Map();
-
-  anchorEls.forEach(a => {
+  // ===== 모달 레지스트리 =====
+  const anchors = $$('.grid-item a[data-photo-id]');
+  const modalsMap = new Map();
+  anchors.forEach(a => {
     const id = a.getAttribute('data-photo-id');
-    const m = qs('#modal-' + escId(id));
-    if (m) MODALS.set(String(id), m);
+    const m = document.getElementById('modal-' + id);
+    if (m) modalsMap.set(String(id), m);
   });
 
-  // ---- Utilities -----------------------------------------------------------
-  function anyOpen() {
-    let open = null;
-    MODALS.forEach(m => { if (m.classList.contains('is-open')) open = m; });
-    return open;
-  }
-
-  // Stop all iframes within a scope (store src -> data attribute, then remove src)
-  function stopIframes(scope) {
-    $$('iframe', scope).forEach((f) => {
-      try {
-        // best-effort YouTube pause
-        f.contentWindow?.postMessage?.(
-          JSON.stringify({ event: 'command', func: 'stopVideo', args: [] }),
-          '*'
-        );
-      } catch (_) { /* noop */ }
-      const src = f.getAttribute('src');
-      if (src) {
-        f.dataset._prevSrc = src;
-        f.removeAttribute('src');
-      }
+  // ===== 초기 미디어 지연 설정 =====
+  function primeModalMediaLazy() {
+    modalsMap.forEach((modal) => {
+      // 이미지: src -> data-src로 옮겨 초기 로딩 차단
+      $$('img', modal).forEach(img => {
+        if (img.dataset._primed === '1') return;
+        if (img.hasAttribute('src')) {
+          img.dataset.src = img.getAttribute('src');
+          img.removeAttribute('src');
+        }
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.dataset._primed = '1';
+      });
+      // iframe: src 제거 후 data-_prevSrc에 보관
+      $$('iframe', modal).forEach(ifr => {
+        if (ifr.dataset._primed === '1') return;
+        if (ifr.hasAttribute('src')) {
+          ifr.dataset._prevSrc = ifr.getAttribute('src');
+          ifr.removeAttribute('src');
+        }
+        ifr.setAttribute('playsinline','');
+        ifr.dataset._primed = '1';
+      });
     });
   }
+  primeModalMediaLazy();
 
-  // Restore iframe src if it was previously removed
-  function resumeIframes(scope) {
-    $$('iframe', scope).forEach((f) => {
-      const prev = f.dataset._prevSrc;
-      if (prev && !f.getAttribute('src')) {
-        // iOS autoplay is allowed only when muted; most embeds already have &mute=1
-        // Ensure playsinline to avoid fullscreen jumps on iOS
-        f.setAttribute('playsinline', 'playsinline');
-        f.setAttribute('src', prev);
-        delete f.dataset._prevSrc;
-      }
+  // ===== 모달 열기/닫기 시 미디어 복원/해제 =====
+  function restoreModalMedia(modal) {
+    $$('img', modal).forEach(img => {
+      const src = img.dataset.src;
+      if (src && !img.getAttribute('src')) img.setAttribute('src', src);
+    });
+    $$('iframe', modal).forEach(ifr => {
+      const prev = ifr.dataset._prevSrc;
+      if (prev && !ifr.getAttribute('src')) ifr.setAttribute('src', prev);
     });
   }
-
-  // Make images lazy within a scope (convert src -> data-src and set loading/decoding)
-  function ensureLazyImages(scope) {
-    $$('img', scope).forEach(img => {
-      if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
-      if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
-      if (!img.dataset.src && img.getAttribute('src')) {
-        img.dataset.src = img.getAttribute('src');
-        img.removeAttribute('src');
+  function releaseModalMedia(modal) {
+    $$('iframe', modal).forEach(ifr => {
+      if (ifr.hasAttribute('src')) {
+        ifr.dataset._prevSrc = ifr.getAttribute('src');
+        ifr.removeAttribute('src');
       }
     });
+    // 이미지는 남겨도 되지만 iOS 메모리 민감 시 다음 줄 활성화
+    // $$('img', modal).forEach(img => { if (img.getAttribute('src')) img.removeAttribute('src'); });
   }
 
-  // Hydrate any <img data-src> back to src (used on open)
-  function hydrateVisibleImages(scope) {
-    $$('img[data-src]', scope).forEach(img => {
-      if (!img.getAttribute('src')) {
-        img.setAttribute('src', img.dataset.src);
-      }
-    });
-  }
-
-  // ---- State guards to avoid history loops on mobile ----------------------
-  let IN_POPSTATE = false;
-  let PROGRAMMATIC = false;
-  let CURRENT_ID = null;
+  // ===== 히스토리 가드 =====
   let INITIALIZED = false;
+  let PROGRAMMATIC = false;
+  let IN_POPSTATE = false;
 
-  // ---- Modal open / close --------------------------------------------------
-  function closeAll() {
-    const opened = anyOpen();
-    if (!opened) return;
-
-    stopIframes(opened);
-    opened.classList.remove('is-open');
-    opened.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    CURRENT_ID = null;
-  }
-
-  function openById(id, fromPopstate = false) {
-    const target = MODALS.get(String(id));
-    if (!target) return;
-
-    const opened = anyOpen();
-    if (opened === target) return;
-    if (opened) closeAll();
-
-    // lazy-hydrate only the images/iframes inside the opened modal
-    ensureLazyImages(target);
-    hydrateVisibleImages(target);
-    resumeIframes(target);
-
-    if (target.parentElement !== document.body) {
-      document.body.appendChild(target);
-    }
-    target.classList.add('is-open');
-    target.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    CURRENT_ID = String(id);
-
-    if (!fromPopstate) {
-      const url = new URL(window.location.href);
-      const nextPath = `/gallery/${encodeURIComponent(String(id))}`;
-      if (url.pathname !== nextPath) {
-        PROGRAMMATIC = true;
-        history.pushState({ photoId: String(id) }, '', nextPath);
-        PROGRAMMATIC = false;
+  function closeAllModals() {
+    modalsMap.forEach((m) => {
+      if (m.classList.contains('is-open')) {
+        releaseModalMedia(m);
       }
-    }
-  }
-
-  function closeModal(fromPopstate = false) {
-    if (!anyOpen()) return;
-
-    closeAll();
-
-    if (!fromPopstate) {
-      const base = baseURL();
-      if ((window.location.pathname + window.location.search) !== base) {
-        PROGRAMMATIC = true;
-        history.replaceState(null, '', base);
-        PROGRAMMATIC = false;
-      }
-    }
-  }
-
-  // ---- Event bindings ------------------------------------------------------
-  anchorEls.forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const id = a.getAttribute('data-photo-id');
-      if (!id) return;
-      openById(id, /*fromPopstate*/ false);
-    }, { passive: false });
-  });
-
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest?.('[data-modal-close]');
-    if (!btn) return;
-    e.preventDefault();
-    closeModal(false);
-  }, { passive: false });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      closeModal(false);
-    }
-  });
-
-  // iOS Safari occasionally emits an initial popstate on load; guard with INITIALIZED.
-  window.addEventListener('popstate', () => {
-    if (!INITIALIZED || PROGRAMMATIC || IN_POPSTATE) return;
-    IN_POPSTATE = true;
-    try {
-      const st = history.state;
-      const pid = st && st.photoId ? String(st.photoId) : null;
-      if (pid) {
-        openById(pid, /*fromPopstate*/ true);
-      } else {
-        closeModal(true);
-      }
-    } finally {
-      IN_POPSTATE = false;
-    }
-  });
-
-  // ---- Initial URL parse ---------------------------------------------------
-  function parseInitialPhotoId() {
-    const m = window.location.pathname.match(/\/gallery\/([^/]+)$/);
-    if (m) return decodeURIComponent(m[1]);
-    const sp = new URLSearchParams(window.location.search);
-    const q = sp.get('photoId');
-    return q ? String(q) : null;
-  }
-
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
-  }
-
-  // ---- CRITICAL: mobile-safe boot -----------------------------------------
-  // On first load, prevent hidden media inside ALL modals from loading.
-  // This avoids iOS "page reloaded due to a problem" loops by keeping memory/CPU low.
-  (function preLazyAllModals() {
-    MODALS.forEach((modal) => {
-      ensureLazyImages(modal);
-      stopIframes(modal);
-      // keep all modals hidden for a beat while we flip attributes
-      modal.setAttribute('aria-hidden', 'true');
-      modal.classList.remove('is-open');
+      m.classList.remove('is-open');
+      m.setAttribute('aria-hidden', 'true');
     });
-  })();
+    document.body.style.overflow = '';
+  }
 
-  // Now handle initial route
-  const initial = parseInitialPhotoId();
-  if (initial && MODALS.has(String(initial))) {
-    // When landing on a /gallery/:id route, ensure state is seeded so back works once
-    PROGRAMMATIC = true;
-    history.replaceState({ photoId: String(initial) }, '', window.location.pathname + window.location.search);
-    PROGRAMMATIC = false;
-    openById(initial, /*fromPopstate*/ true);
-  } else {
-    // Clean stray query (?photoId) from prior sessions
-    const base = baseURL();
-    if ((window.location.pathname + window.location.search) !== base) {
+  function openById(id, fromPopstate=false) {
+    closeAllModals();
+    const modal = modalsMap.get(String(id));
+    if (!modal) return;
+
+    if (modal.parentElement !== document.body) document.body.appendChild(modal);
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    restoreModalMedia(modal);
+
+    if (!fromPopstate) {
       PROGRAMMATIC = true;
-      history.replaceState(null, '', base);
+      history.pushState({ photoId: id }, '', '/gallery/' + id);
       PROGRAMMATIC = false;
     }
   }
 
-  INITIALIZED = true;
+  function closeModal(fromPopstate=false) {
+    let wasOpen = false;
+    modalsMap.forEach(m => { if (m.classList.contains('is-open')) wasOpen = true; });
+    closeAllModals();
+
+    if (!fromPopstate && wasOpen) {
+      // URL 청소: 루트만 남김
+      PROGRAMMATIC = true;
+      history.replaceState({}, '', '/');
+      PROGRAMMATIC = false;
+    }
+  }
+
+  function parsePhotoIdFromURL() {
+    const pathMatch = location.pathname.match(/\/gallery\/([^/]+)$/);
+    if (pathMatch) return pathMatch[1];
+    const sp = new URLSearchParams(location.search);
+    return sp.get('photoId');
+  }
+
+  // ===== 앵커 클릭 → 모달 열기 =====
+  anchors.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('data-photo-id');
+      openById(id, false);
+    });
+  });
+
+  // ===== 모달 닫기 버튼 =====
+  $$('[data-modal-close]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal(false);
+    });
+  });
+
+  // ===== ESC 닫기 =====
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal(false);
+  });
+
+  // ===== popstate =====
+  window.addEventListener('popstate', () => {
+    if (PROGRAMMATIC) return;
+    IN_POPSTATE = true;
+    const pid = parsePhotoIdFromURL();
+    if (pid) openById(pid, true);
+    else closeModal(true);
+    IN_POPSTATE = false;
+  });
+
+  // ===== 초기 URL 상태 반영 =====
+  (function initFromURL() {
+    const initial = parsePhotoIdFromURL();
+    if (initial) openById(initial, true);
+    INITIALIZED = true;
+  })();
+
+  // ===== [핵심 수정] 모달 내부 data-type 클릭 시: 모바일 라인 갱신 추가 =====
+  // 다른 스크립트가 필터 적용을 담당해도, 여기서는 label만 확실히 반영한다.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.modal .data-type[data-filter]');
+    if (!btn) return;
+
+    // 기존 동작(필터 적용/타이틀 갱신)은 다른 스크립트가 수행.
+    // 여기서는 모바일일 때 mobile-filter-line만 업데이트.
+    const label = getLocalizedLabelFromButton(btn, (btn.textContent||'').trim());
+    if (!isDesktop()) updateMobileLine(label);
+
+    // 모달 닫기는 기존 닫기 버튼 트리거를 따라간다(사이트 구현 통일성 유지)
+    const closeBtn = $('.modal.is-open [data-modal-close]');
+    if (closeBtn) {
+      e.preventDefault();
+      closeBtn.click();
+    }
+  });
+
 })();
