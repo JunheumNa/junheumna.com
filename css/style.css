@@ -475,8 +475,8 @@ img {
   }
 
   .grid-container {
-    position: fixed;
-    top: 93px;
+    position: relative;
+    top: 0;
     height: calc(100vh - 141px);
     padding-top: 0;
     overflow-y: auto;
