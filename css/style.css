@@ -255,7 +255,7 @@ a {
   top: 50px;
   left: 0;
   width: 100vw;
-  height: calc(100dvh - (var(--chart-height) + 5px));
+  height: auto;
   padding-top: 10px;
   overflow: auto;
 }
@@ -266,7 +266,7 @@ a {
   gap: 10px;
   width: auto;
   margin: var(--chart-margin);
-  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 
 .grid-item {
@@ -485,6 +485,7 @@ img {
 
   .grid {
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-bottom: 6px;
   }
 
   .grid-item {
