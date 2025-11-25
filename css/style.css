@@ -467,6 +467,7 @@ img {
     width: calc((100% - 30px) / 4);
     margin: 0;
     padding-bottom: 13.5px;
+    background-color: var(--background-color);
     border-bottom: none;
   }
 
