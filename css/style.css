@@ -478,14 +478,14 @@ img {
   .grid-container {
     position: relative;
     top: 83px;
-    height: calc(100vh - 141px);
+    height: calc(100vh - 135px);
     padding-top: 0;
     overflow-y: auto;
   }
 
   .grid {
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding-bottom: 6px;
+    padding-bottom: 20px;
   }
 
   .grid-item {
