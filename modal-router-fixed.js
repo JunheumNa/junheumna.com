@@ -1,8 +1,8 @@
 /* modal-router-fixed.js
    - 모바일 안정화(메모리 폭주 방지)
    - 히스토리 루프 가드
-   - [Final Fix v2.0] Safari 및 Chrome의 이미지 로딩 문제 해결
-   - 안전한 <img/> 태그 생성 및 교체 로직 적용
+   - [FINAL FIX] 모든 브라우저에서 모달 내부 이미지 로딩 문제 해결
+   - 모달 열릴 때 loading="eager"와 새로운 태그 교체 방식으로 로딩 강제
 */
 
 (() => {
@@ -23,7 +23,7 @@
     return (lang==='en') ? (en || txt || fallback) : (ko || txt || fallback);
   };
 
-  // ===== mobile-filter-line 제어 =====
+  // ===== mobile-filter-line 제어 (생략) =====
   function ensureMobileLine() {
     let host = $('.category_pannel');
     if (!host) {
@@ -60,24 +60,35 @@
     if (m) modalsMap.set(String(id), m);
   });
 
-  // ===== 초기 미디어 지연 설정 (Lazy Setup) =====
+  // ===== 초기 미디어 지연 설정 (Lazy Setup) - 최종 수정됨 =====
   function primeModalMediaLazy() {
     modalsMap.forEach((modal) => {
-      // 이미지: src -> data-src로 이동
+      // 이미지: src -> data-src로 이동, lazy 관련 속성 모두 제거
       $$('img', modal).forEach(img => {
         if (img.dataset._primed === '1') return;
         
-        // [중요] src 속성만 확인: src가 있으면 data-src에 저장하고 src는 제거
-        if (img.hasAttribute('src')) {
-          img.dataset.src = img.getAttribute('src');
-          img.removeAttribute('src');
-        }
+        let src = img.getAttribute('src');
         
-        img.setAttribute('loading', 'lazy');
+        // 1. 이미 src가 있는 경우: data-src로 옮기고 src 제거
+        if (src && src.trim() !== '') {
+          img.dataset.src = src;
+          img.removeAttribute('src'); 
+        } else if (img.hasAttribute('data-src')) {
+          // 2. 이미 data-src만 있는 경우: 유지
+        } else {
+            // src도 data-src도 없는 이미지: 스킵
+            img.dataset._primed = '1';
+            return;
+        }
+
+        // 3. 브라우저 캐싱/충돌 방지: lazy 관련 속성 모두 제거
+        img.removeAttribute('loading'); 
+        img.removeAttribute('decoding');
+        
         img.dataset._primed = '1';
       });
 
-      // iframe: src 제거
+      // iframe: src 제거 (기존 코드 유지)
       $$('iframe', modal).forEach(ifr => {
         if (ifr.dataset._primed === '1') return;
         if (ifr.hasAttribute('src')) {
@@ -92,7 +103,7 @@
   // 로드 시 즉시 실행
   primeModalMediaLazy();
 
-  // ===== [핵심] 모달 미디어 복원 (Restore Media) =====
+  // ===== [핵심] 모달 미디어 복원 (Restore Media) - 최종 수정됨 =====
   function restoreModalMedia(modal) {
     // 1. 이미지 복원 (새 노드 생성 및 교체 방식)
     $$('img', modal).forEach(oldImg => {
@@ -102,9 +113,9 @@
 
       const newImg = document.createElement('img');
       
-      // 기존 속성 복사 (class, style 등)
+      // 기존 속성 복사 (class, style, alt 등)
       Array.from(oldImg.attributes).forEach(attr => {
-        // 이미지를 교체할 것이므로 src, data-src, loading, decoding은 제외
+        // 교체할 것이므로 src, data-src, loading, decoding은 제외
         if (attr.name !== 'src' && attr.name !== 'data-src' && attr.name !== 'loading' && attr.name !== 'decoding') {
           newImg.setAttribute(attr.name, attr.value);
         }
@@ -118,7 +129,7 @@
       oldImg.parentNode.replaceChild(newImg, oldImg);
     });
 
-    // 2. iframe 복원
+    // 2. iframe 복원 (기존 코드 유지)
     $$('iframe', modal).forEach(ifr => {
       const prev = ifr.dataset._prevSrc;
       if (prev && !ifr.getAttribute('src')) ifr.setAttribute('src', prev);
@@ -163,11 +174,9 @@
     document.body.style.overflow = 'hidden';
 
     // 2. [강제 리플로우] 브라우저가 화면 크기를 계산하도록 강제
-    // 이 시점에서 브라우저는 modal이 화면에 보인다고 인식해야 함
     void modal.offsetWidth;
 
-    // 3. 미디어 복원 실행 (노드 교체)
-    // requestAnimationFrame을 제거하고 즉시 실행하여 DOM 교체 지연 방지
+    // 3. 미디어 복원 실행 (즉시 실행)
     restoreModalMedia(modal);
 
     if (!fromPopstate) {
