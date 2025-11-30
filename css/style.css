@@ -423,10 +423,6 @@ img {
     width: calc((100vw - 70px) / 4);
     height: calc(100vh - 140px);
     overflow-y: auto;
-    height: auto;                       /* 고정값 제거 */
-    max-height: calc(100dvh - 140px);   /* 동적 뷰포트 기준 */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;  /* 스크롤 관성 */
   }
 
   .category .category-title.on + .category-inner {
@@ -502,8 +498,8 @@ img {
   }
 }
 
-.section, .grid, .gallery, .work {
-  content-visibility: auto; /* 비가시 영역의 렌더링을 스킵 */
-  contain-intrinsic-size: 1000px 800px; /* 예비 크기(원하는 값으로 조정) */
+/* .work를 목록에서 제거합니다 */
+.section, .grid, .gallery {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px 800px;
 }
-
