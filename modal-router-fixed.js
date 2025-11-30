@@ -2,7 +2,7 @@
    - 모바일 안정화(메모리 폭주 방지): 모달 내부 미디어 지연 복원/해제
    - 히스토리 루프 가드(초기/프로그램틱/팝스테이트 플래그)
    - 모바일(<800px)에서 모달 내 data-type 클릭 시 mobile-filter-line 즉시 갱신
-   - [Fix] PC Chrome 이미지 로딩 지연 문제 해결 (loading="eager" 적용)
+   - [Fix] PC Chrome 이미지 깨짐(Broken Image) 및 로딩 지연 완벽 해결
 */
 
 (() => {
@@ -68,15 +68,19 @@
       // 이미지: src -> data-src로 옮겨 초기 로딩 차단
       $$('img', modal).forEach(img => {
         if (img.dataset._primed === '1') return;
+        
+        // 기존 src가 있다면 data-src로 백업하고 삭제
         if (img.hasAttribute('src')) {
           img.dataset.src = img.getAttribute('src');
           img.removeAttribute('src');
         }
-        // 초기에는 lazy로 설정하여 메모리 절약
-        img.loading = 'lazy';
-        img.decoding = 'async';
+        
+        // 초기 상태는 lazy로 설정해두어 불필요한 네트워크 차단
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
         img.dataset._primed = '1';
       });
+
       // iframe: src 제거 후 data-_prevSrc에 보관
       $$('iframe', modal).forEach(ifr => {
         if (ifr.dataset._primed === '1') return;
@@ -89,23 +93,34 @@
       });
     });
   }
+  // 페이지 로드 시 즉시 실행
   primeModalMediaLazy();
 
   // ===== 모달 열기/닫기 시 미디어 복원/해제 =====
   function restoreModalMedia(modal) {
     $$('img', modal).forEach(img => {
       const src = img.dataset.src;
+      // src가 있어야 하고, 현재 src가 비어있을 때만 실행
       if (src && !img.getAttribute('src')) {
-        // [수정] 모달이 열릴 때는 즉시 로딩(eager)으로 변경하여 크롬 이슈 해결
-        img.loading = 'eager'; 
+        // [핵심 Fix] Chrome 렌더링 버그 방지를 위한 속성 재설정
+        // lazy 속성이 남아있으면 display:none -> block 전환 시점에 로딩을 안 할 수 있음
+        img.removeAttribute('loading'); 
+        img.removeAttribute('decoding');
+        
+        // 강제로 eager(즉시 로딩) 설정
+        img.setAttribute('loading', 'eager');
+        
+        // 마지막으로 src 주입
         img.setAttribute('src', src);
       }
     });
+
     $$('iframe', modal).forEach(ifr => {
       const prev = ifr.dataset._prevSrc;
       if (prev && !ifr.getAttribute('src')) ifr.setAttribute('src', prev);
     });
   }
+
   function releaseModalMedia(modal) {
     $$('iframe', modal).forEach(ifr => {
       if (ifr.hasAttribute('src')) {
@@ -113,7 +128,7 @@
         ifr.removeAttribute('src');
       }
     });
-    // 이미지는 닫을 때 다시 lazy로 돌리거나 src를 제거할 수 있음 (선택사항)
+    // 이미지는 닫을 때 메모리 해제를 원하면 아래 주석 해제 (단, 재오픈 시 깜빡임 발생 가능)
     // $$('img', modal).forEach(img => { if (img.getAttribute('src')) img.removeAttribute('src'); });
   }
 
@@ -138,14 +153,19 @@
     const modal = modalsMap.get(String(id));
     if (!modal) return;
 
+    // DOM 트리 최하단으로 이동 (Z-index 및 렌더링 순서 보장)
     if (modal.parentElement !== document.body) document.body.appendChild(modal);
-    
-    // [중요] display:flex(is-open)가 먼저 적용되어야 이미지가 로딩됨
+
+    // [1단계] 모달을 먼저 보이게 처리
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    
-    // 이미지 소스 복원
+
+    // [2단계: 핵심 Fix] 강제 리플로우(Reflow) 트리거
+    // 브라우저가 display:flex 상태임을 확실히 인지하도록 계산을 강제함
+    void modal.offsetWidth; 
+
+    // [3단계] 이미지가 화면에 보인다고 인식된 후 소스 복원
     restoreModalMedia(modal);
 
     if (!fromPopstate) {
