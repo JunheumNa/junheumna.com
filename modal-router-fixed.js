@@ -1,18 +1,15 @@
 /* modal-router-fixed.js
-   - 모바일 안정화(메모리 폭주 방지): 모달 내부 미디어 지연 복원/해제
-   - 히스토리 루프 가드(초기/프로그램틱/팝스테이트 플래그)
-   - 모바일(<800px)에서 모달 내 data-type 클릭 시 mobile-filter-line 즉시 갱신
-   - [Fix] PC Chrome 이미지 깨짐(Broken Image) 및 로딩 지연 완벽 해결
+   - 모바일 안정화(메모리 폭주 방지)
+   - 히스토리 루프 가드
+   - [Final Fix] PC Chrome 이미지 로딩 실패 해결 (Clone Node Replacement 기법 적용)
 */
 
 (() => {
   // ===== 유틸 =====
   const $  = (sel, ctx=document) => (ctx||document).querySelector(sel);
   const $$ = (sel, ctx=document) => Array.prototype.slice.call((ctx||document).querySelectorAll(sel));
-  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v);
   const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches;
 
-  const DEFAULT_LANG = 'ko';
   const getCurrentLang = () => {
     const lang = (document.documentElement.getAttribute('lang')||'').toLowerCase();
     return lang.startsWith('en') ? 'en' : 'ko';
@@ -62,26 +59,23 @@
     if (m) modalsMap.set(String(id), m);
   });
 
-  // ===== 초기 미디어 지연 설정 =====
+  // ===== 초기 미디어 지연 설정 (Lazy Setup) =====
   function primeModalMediaLazy() {
     modalsMap.forEach((modal) => {
-      // 이미지: src -> data-src로 옮겨 초기 로딩 차단
+      // 이미지: src -> data-src로 이동, loading="lazy" 설정
       $$('img', modal).forEach(img => {
         if (img.dataset._primed === '1') return;
         
-        // 기존 src가 있다면 data-src로 백업하고 삭제
         if (img.hasAttribute('src')) {
           img.dataset.src = img.getAttribute('src');
           img.removeAttribute('src');
         }
-        
-        // 초기 상태는 lazy로 설정해두어 불필요한 네트워크 차단
         img.setAttribute('loading', 'lazy');
         img.setAttribute('decoding', 'async');
         img.dataset._primed = '1';
       });
 
-      // iframe: src 제거 후 data-_prevSrc에 보관
+      // iframe: src 제거
       $$('iframe', modal).forEach(ifr => {
         if (ifr.dataset._primed === '1') return;
         if (ifr.hasAttribute('src')) {
@@ -93,34 +87,39 @@
       });
     });
   }
-  // 페이지 로드 시 즉시 실행
+  // 로드 시 즉시 실행
   primeModalMediaLazy();
 
-  // ===== 모달 열기/닫기 시 미디어 복원/해제 =====
+  // ===== [핵심] 모달 미디어 복원 (Restore Media) =====
   function restoreModalMedia(modal) {
-    $$('img', modal).forEach(img => {
-      const src = img.dataset.src;
-      // src가 있어야 하고, 현재 src가 비어있을 때만 실행
-      if (src && !img.getAttribute('src')) {
-        // [핵심 Fix] Chrome 렌더링 버그 방지를 위한 속성 재설정
-        // lazy 속성이 남아있으면 display:none -> block 전환 시점에 로딩을 안 할 수 있음
-        img.removeAttribute('loading'); 
-        img.removeAttribute('decoding');
-        
-        // 강제로 eager(즉시 로딩) 설정
-        img.setAttribute('loading', 'eager');
-        
-        // 마지막으로 src 주입
-        img.setAttribute('src', src);
-      }
+    // 1. 이미지 복원 (Clone & Replace 방식)
+    // 기존 태그를 수정하는 대신, 복제본을 만들어 교체함으로써 브라우저 렌더링을 강제 리셋함
+    $$('img', modal).forEach(oldImg => {
+      const src = oldImg.dataset.src;
+      // 이미 src가 있거나 data-src가 없으면 스킵
+      if (!src || oldImg.getAttribute('src')) return;
+
+      const newImg = oldImg.cloneNode(true); // 속성 복사
+      
+      // Chrome 버그 방지: 속성 순서 중요
+      newImg.removeAttribute('loading');   // 기존 lazy 제거
+      newImg.removeAttribute('decoding');
+      
+      newImg.setAttribute('loading', 'eager'); // 즉시 로딩 강제
+      newImg.setAttribute('src', src);         // 소스 주입
+      
+      // DOM 교체 (이 순간 브라우저는 새 이미지로 인식하여 즉시 그림)
+      oldImg.parentNode.replaceChild(newImg, oldImg);
     });
 
+    // 2. iframe 복원
     $$('iframe', modal).forEach(ifr => {
       const prev = ifr.dataset._prevSrc;
       if (prev && !ifr.getAttribute('src')) ifr.setAttribute('src', prev);
     });
   }
 
+  // ===== 모달 미디어 해제 (Release Media) =====
   function releaseModalMedia(modal) {
     $$('iframe', modal).forEach(ifr => {
       if (ifr.hasAttribute('src')) {
@@ -128,12 +127,10 @@
         ifr.removeAttribute('src');
       }
     });
-    // 이미지는 닫을 때 메모리 해제를 원하면 아래 주석 해제 (단, 재오픈 시 깜빡임 발생 가능)
-    // $$('img', modal).forEach(img => { if (img.getAttribute('src')) img.removeAttribute('src'); });
+    // 이미지는 닫을 때 굳이 제거하지 않아도 됨 (깜빡임 방지)
   }
 
-  // ===== 히스토리 가드 =====
-  let INITIALIZED = false;
+  // ===== 모달 제어 로직 =====
   let PROGRAMMATIC = false;
   let IN_POPSTATE = false;
 
@@ -153,20 +150,21 @@
     const modal = modalsMap.get(String(id));
     if (!modal) return;
 
-    // DOM 트리 최하단으로 이동 (Z-index 및 렌더링 순서 보장)
     if (modal.parentElement !== document.body) document.body.appendChild(modal);
 
-    // [1단계] 모달을 먼저 보이게 처리
+    // 1. 모달을 먼저 보이게 함 (display:flex)
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // [2단계: 핵심 Fix] 강제 리플로우(Reflow) 트리거
-    // 브라우저가 display:flex 상태임을 확실히 인지하도록 계산을 강제함
-    void modal.offsetWidth; 
+    // 2. [강제 리플로우] 브라우저가 화면 크기를 계산하도록 강제
+    void modal.offsetWidth;
 
-    // [3단계] 이미지가 화면에 보인다고 인식된 후 소스 복원
-    restoreModalMedia(modal);
+    // 3. 미디어 복원 실행
+    // requestAnimationFrame을 사용하여 페인트 프레임 보장
+    requestAnimationFrame(() => {
+      restoreModalMedia(modal);
+    });
 
     if (!fromPopstate) {
       PROGRAMMATIC = true;
@@ -194,7 +192,7 @@
     return sp.get('photoId');
   }
 
-  // ===== 앵커 클릭 → 모달 열기 =====
+  // ===== 이벤트 리스너 =====
   anchors.forEach(a => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
@@ -203,7 +201,6 @@
     });
   });
 
-  // ===== 모달 닫기 버튼 =====
   $$('[data-modal-close]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -211,12 +208,10 @@
     });
   });
 
-  // ===== ESC 닫기 =====
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal(false);
   });
 
-  // ===== popstate =====
   window.addEventListener('popstate', () => {
     if (PROGRAMMATIC) return;
     IN_POPSTATE = true;
@@ -226,14 +221,13 @@
     IN_POPSTATE = false;
   });
 
-  // ===== 초기 URL 상태 반영 =====
+  // 초기 로드
   (function initFromURL() {
     const initial = parsePhotoIdFromURL();
     if (initial) openById(initial, true);
-    INITIALIZED = true;
   })();
 
-  // ===== 모달 내부 data-type 클릭 핸들러 =====
+  // 모달 내부 필터 클릭
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.modal .data-type[data-filter]');
     if (!btn) return;
