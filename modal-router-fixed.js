@@ -1,7 +1,8 @@
 /* modal-router-fixed.js
    - 모바일 안정화(메모리 폭주 방지)
    - 히스토리 루프 가드
-   - [Final Fix] PC Chrome 이미지 로딩 실패 해결 (Clone Node Replacement 기법 적용)
+   - [Final Fix v2.0] Safari 및 Chrome의 이미지 로딩 문제 해결
+   - 안전한 <img/> 태그 생성 및 교체 로직 적용
 */
 
 (() => {
@@ -62,16 +63,17 @@
   // ===== 초기 미디어 지연 설정 (Lazy Setup) =====
   function primeModalMediaLazy() {
     modalsMap.forEach((modal) => {
-      // 이미지: src -> data-src로 이동, loading="lazy" 설정
+      // 이미지: src -> data-src로 이동
       $$('img', modal).forEach(img => {
         if (img.dataset._primed === '1') return;
         
+        // [중요] src 속성만 확인: src가 있으면 data-src에 저장하고 src는 제거
         if (img.hasAttribute('src')) {
           img.dataset.src = img.getAttribute('src');
           img.removeAttribute('src');
         }
+        
         img.setAttribute('loading', 'lazy');
-        img.setAttribute('decoding', 'async');
         img.dataset._primed = '1';
       });
 
@@ -92,23 +94,27 @@
 
   // ===== [핵심] 모달 미디어 복원 (Restore Media) =====
   function restoreModalMedia(modal) {
-    // 1. 이미지 복원 (Clone & Replace 방식)
-    // 기존 태그를 수정하는 대신, 복제본을 만들어 교체함으로써 브라우저 렌더링을 강제 리셋함
+    // 1. 이미지 복원 (새 노드 생성 및 교체 방식)
     $$('img', modal).forEach(oldImg => {
       const src = oldImg.dataset.src;
       // 이미 src가 있거나 data-src가 없으면 스킵
       if (!src || oldImg.getAttribute('src')) return;
 
-      const newImg = oldImg.cloneNode(true); // 속성 복사
+      const newImg = document.createElement('img');
       
-      // Chrome 버그 방지: 속성 순서 중요
-      newImg.removeAttribute('loading');   // 기존 lazy 제거
-      newImg.removeAttribute('decoding');
+      // 기존 속성 복사 (class, style 등)
+      Array.from(oldImg.attributes).forEach(attr => {
+        // 이미지를 교체할 것이므로 src, data-src, loading, decoding은 제외
+        if (attr.name !== 'src' && attr.name !== 'data-src' && attr.name !== 'loading' && attr.name !== 'decoding') {
+          newImg.setAttribute(attr.name, attr.value);
+        }
+      });
+
+      // [핵심] 로딩 강제 속성 설정
+      newImg.setAttribute('loading', 'eager'); 
+      newImg.setAttribute('src', src);         
       
-      newImg.setAttribute('loading', 'eager'); // 즉시 로딩 강제
-      newImg.setAttribute('src', src);         // 소스 주입
-      
-      // DOM 교체 (이 순간 브라우저는 새 이미지로 인식하여 즉시 그림)
+      // DOM 교체
       oldImg.parentNode.replaceChild(newImg, oldImg);
     });
 
@@ -127,7 +133,6 @@
         ifr.removeAttribute('src');
       }
     });
-    // 이미지는 닫을 때 굳이 제거하지 않아도 됨 (깜빡임 방지)
   }
 
   // ===== 모달 제어 로직 =====
@@ -158,13 +163,12 @@
     document.body.style.overflow = 'hidden';
 
     // 2. [강제 리플로우] 브라우저가 화면 크기를 계산하도록 강제
+    // 이 시점에서 브라우저는 modal이 화면에 보인다고 인식해야 함
     void modal.offsetWidth;
 
-    // 3. 미디어 복원 실행
-    // requestAnimationFrame을 사용하여 페인트 프레임 보장
-    requestAnimationFrame(() => {
-      restoreModalMedia(modal);
-    });
+    // 3. 미디어 복원 실행 (노드 교체)
+    // requestAnimationFrame을 제거하고 즉시 실행하여 DOM 교체 지연 방지
+    restoreModalMedia(modal);
 
     if (!fromPopstate) {
       PROGRAMMATIC = true;
