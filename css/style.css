@@ -423,6 +423,10 @@ img {
     width: calc((100vw - 70px) / 4);
     height: calc(100vh - 140px);
     overflow-y: auto;
+    height: auto;                       /* 고정값 제거 */
+    max-height: calc(100dvh - 140px);   /* 동적 뷰포트 기준 */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;  /* 스크롤 관성 */
   }
 
   .category .category-title.on + .category-inner {
@@ -478,7 +482,7 @@ img {
   .grid-container {
     position: relative;
     top: 83px;
-    height: calc(100vh - 135px);
+    height: calc(100dvh - 135px);
     padding-top: 0;
     overflow-y: auto;
   }
