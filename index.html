@@ -2206,22 +2206,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })();
 </script>
-<script>
-(function() {
-  document.addEventListener('click', function(e) {
-    var a = e.target.closest('.grid-item a[data-photo-id]');
-    if (!a) return;
-    var id = a.getAttribute('data-photo-id');
-    var modal = document.getElementById('modal-' + id);
-    if (!modal) return;
-    modal.querySelectorAll('img[data-src]').forEach(function(img) {
-      if (!img.getAttribute('src')) {
-        img.setAttribute('src', img.getAttribute('data-src'));
-      }
-    });
-  }, true);
-})();
-</script>
 <script src="./modal-router-fixed.js"></script>
 </body>
 </html>
