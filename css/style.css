@@ -423,6 +423,8 @@ img {
     width: calc((100vw - 70px) / 4);
     height: calc(100vh - 140px);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .category .category-title.on + .category-inner {
@@ -502,4 +504,24 @@ img {
   content-visibility: auto; /* 비가시 영역의 렌더링을 스킵 */
   contain-intrinsic-size: 1000px 800px; /* 예비 크기(원하는 값으로 조정) */
 }
+/* dvh 지원 시 보다 정확한 높이 적용 (툴바/주소창 상태 변화 반영) */
+@supports (height: 100dvh) {
+  @media screen and (min-width: 800px) {
+    .category .category-inner {
+      height: calc(100dvh - 140px);
+    }
+  }
+}
 
+/* 안전 영역 고려(일부 환경에서 하단 제스처 바) */
+@supports (padding: max(0px)) {
+  .category .category-inner {
+    /* 하단 제스처 바가 있는 기기에서 약간의 패딩 여유 */
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* 모달이 열렸을 때 바운스/점프 줄임 */
+.modal.is-open {
+  overscroll-behavior: contain;
+}
