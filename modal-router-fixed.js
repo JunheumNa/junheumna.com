@@ -1,144 +1,226 @@
-/*!
- * modal-media-patch.js
- * - 그리드 썸네일은 DOM 로드 시 WebP로 지연 로딩 설정
- * - 모달은 열릴 때 모달 내부 이미지를 WebP로 교체 후 즉시 로딩
- * - WebP가 혹시 404일 경우, 원본 확장자(JPG/PNG/GIF)로 자동 폴백
- * - 기존 커스텀 이벤트(modal:open / modal:close)가 있을 경우 그대로 활용
- * - jQuery 의존 없음
- */
+/* modal-router-fixed.js
+   - 모바일 안정화(메모리 폭주 방지): 모달 내부 미디어 지연 복원/해제
+   - 히스토리 루프 가드(초기/프로그램틱/팝스테이트 플래그)
+   - 모바일(<800px)에서 모달 내 data-type 클릭 시 mobile-filter-line 즉시 갱신
+*/
 
-/** 지원 유틸 */
-const toWebp = (src) => {
-  if (!src) return src;
-  try {
-    const u = new URL(src, location.href);
-    const pathname = u.pathname;
-    // 확장자 판단: jpg|jpeg|png|gif → webp (이미 webp면 그대로)
-    if (/\.(jpe?g|png|gif)$/i.test(pathname)) {
-      u.pathname = pathname.replace(/\.(jpe?g|png|gif)$/i, '.webp');
-      return u.toString();
-    }
-    return src; // 이미 webp 또는 기타 포맷
-  } catch {
-    // 상대경로 등 URL 생성 실패 시 문자열 치환 시도
-    return src.replace(/\.(jpe?g|png|gif)$/i, '.webp');
-  }
-};
+(() => {
+  // ===== 유틸 =====
+  const $  = (sel, ctx=document) => (ctx||document).querySelector(sel);
+  const $$ = (sel, ctx=document) => Array.prototype.slice.call((ctx||document).querySelectorAll(sel));
+  const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(String(v)) : String(v);
+  const isDesktop = () => window.matchMedia && window.matchMedia('(min-width: 800px)').matches;
 
-// 원본 확장자 추출(폴백용)
-const originalFromWebp = (src, fallbackExt = 'jpg') => {
-  if (!src) return src;
-  return src.replace(/\.webp(\?.*)?$/i, `.${fallbackExt}$1`);
-};
-
-// 이미지 한 장을 webp로 로드(실패 시 폴백)
-const loadImageAsWebpWithFallback = (img) => {
-  if (!(img instanceof HTMLImageElement)) return;
-
-  // 우선순위: data-src > src
-  const original = img.getAttribute('data-src') || img.getAttribute('src') || '';
-  if (!original) return;
-
-  // 어떤 원본이었는지 폴백 확장자 추정
-  const extMatch = original.match(/\.(jpe?g|png|gif)$/i);
-  const fallbackExt = extMatch ? extMatch[0].slice(1) : 'jpg';
-
-  // 성능 힌트
-  try {
-    img.decoding = 'async';
-  } catch {}
-  try {
-    img.loading = img.closest('.modal') ? 'eager' : 'lazy';
-  } catch {}
-
-  // 일단 webp 시도
-  const webpURL = toWebp(original);
-
-  // onerror 한 번만 폴백하도록 보호
-  const onError = (e) => {
-    img.removeEventListener('error', onError);
-    // 이미 폴백 상태면 더 진행하지 않음
-    if (!/\.webp(\?.*)?$/i.test(img.currentSrc || img.src || '')) return;
-    const fb = originalFromWebp(webpURL, fallbackExt);
-    img.src = fb;
+  const DEFAULT_LANG = 'ko';
+  const getCurrentLang = () => {
+    const lang = (document.documentElement.getAttribute('lang')||'').toLowerCase();
+    return lang.startsWith('en') ? 'en' : 'ko';
+  };
+  const getLocalizedLabelFromButton = (btn, fallback='') => {
+    const lang = getCurrentLang();
+    const en = (btn?.dataset?.en || '').trim();
+    const ko = (btn?.dataset?.ko || '').trim();
+    const txt = (btn?.textContent || '').trim();
+    return (lang==='en') ? (en || txt || fallback) : (ko || txt || fallback);
   };
 
-  img.addEventListener('error', onError, { once: true });
-  img.src = webpURL;
-};
-
-// 모달 내부의 모든 이미지 로드
-const loadModalImagesOnDemand = (modalEl) => {
-  if (!modalEl) return;
-  const imgs = modalEl.querySelectorAll('.modal_info img');
-  imgs.forEach(loadImageAsWebpWithFallback);
-};
-
-// 그리드 썸네일 초기 패치(지연 로딩 + webp 교체)
-const patchGridThumbnails = () => {
-  const thumbs = document.querySelectorAll('.grid .grid-item img');
-  thumbs.forEach((img) => {
-    // 이미 처리된 경우 스킵
-    if (img.dataset._patched === '1') return;
-
-    const raw = img.getAttribute('src') || '';
-    if (!raw) return;
-
-    // data-src에 원본 기억(혹시 모를 폴백 대비)
-    if (!img.getAttribute('data-src')) {
-      img.setAttribute('data-src', raw);
+  // ===== mobile-filter-line 제어(다른 스크립트에 의존하지 않고 자체 처리) =====
+  function ensureMobileLine() {
+    let host = $('.category_pannel');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'category_pannel';
+      const anchor = $('.nav-menu-wrapper') || $('nav') || document.body.firstElementChild || document.body;
+      if (anchor.insertAdjacentElement) anchor.insertAdjacentElement('afterend', host);
+      else anchor.parentNode.insertBefore(host, anchor.nextSibling);
     }
-
-    // 성능: lazy + async
-    try { img.loading = 'lazy'; } catch {}
-    try { img.decoding = 'async'; } catch {}
-
-    // 썸네일은 최초부터 webp로 대체
-    const webpURL = toWebp(raw);
-    if (webpURL !== raw) {
-      img.addEventListener('error', function onErr() {
-        img.removeEventListener('error', onErr);
-        // webp가 실패하면 원본 확장자로 복귀
-        img.src = img.getAttribute('data-src') || raw;
-      }, { once: true });
-      img.src = webpURL;
+    let line = $('#mobile-filter-line', host);
+    if (!line) {
+      line = document.createElement('div');
+      line.id = 'mobile-filter-line';
+      line.className = 'filter-selected-line';
+      line.setAttribute('role','status');
+      line.setAttribute('aria-live','polite');
+      host.insertAdjacentElement('afterbegin', line);
     }
+    return line;
+  }
+  function updateMobileLine(label) {
+    if (isDesktop()) return;
+    const line = ensureMobileLine();
+    line.textContent = label || '';
+    line.style.display = label ? '' : 'none';
+  }
 
-    img.dataset._patched = '1';
-  });
-};
-
-// 이벤트 연결
-const bindModalOpenHandler = () => {
-  // 1) 커스텀 이벤트(modal:open)가 있는 경우
-  document.addEventListener('modal:open', (ev) => {
-    const pid = ev?.detail?.photoId;
-    const modal = pid ? document.getElementById(`modal-${pid}`) : document.querySelector('.modal.is-open');
-    if (modal) loadModalImagesOnDemand(modal);
+  // ===== 모달 레지스트리 =====
+  const anchors = $$('.grid-item a[data-photo-id]');
+  const modalsMap = new Map();
+  anchors.forEach(a => {
+    const id = a.getAttribute('data-photo-id');
+    const m = document.getElementById('modal-' + id);
+    if (m) modalsMap.set(String(id), m);
   });
 
-  // 2) 혹시 커스텀 이벤트가 없는 환경 대비: 모달 요소에 class가 붙는 변화를 관찰
-  const observer = new MutationObserver((mutList) => {
-    mutList.forEach((m) => {
-      if (!(m.target instanceof HTMLElement)) return;
-      if (!m.target.classList) return;
-      // 열림 시점 감지
-      if (m.attributeName === 'class' && m.target.classList.contains('modal') && m.target.classList.contains('is-open')) {
-        loadModalImagesOnDemand(m.target);
+  // ===== 초기 미디어 지연 설정 =====
+  function primeModalMediaLazy() {
+    modalsMap.forEach((modal) => {
+      // 이미지: src -> data-src로 옮겨 초기 로딩 차단
+      $$('img', modal).forEach(img => {
+        if (img.dataset._primed === '1') return;
+        if (img.hasAttribute('src')) {
+          img.dataset.src = img.getAttribute('src');
+          img.removeAttribute('src');
+        }
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.dataset._primed = '1';
+      });
+      // iframe: src 제거 후 data-_prevSrc에 보관
+      $$('iframe', modal).forEach(ifr => {
+        if (ifr.dataset._primed === '1') return;
+        if (ifr.hasAttribute('src')) {
+          ifr.dataset._prevSrc = ifr.getAttribute('src');
+          ifr.removeAttribute('src');
+        }
+        ifr.setAttribute('playsinline','');
+        ifr.dataset._primed = '1';
+      });
+    });
+  }
+  primeModalMediaLazy();
+
+  // ===== 모달 열기/닫기 시 미디어 복원/해제 =====
+  function restoreModalMedia(modal) {
+    $$('img', modal).forEach(img => {
+      const src = img.dataset.src;
+      if (src && !img.getAttribute('src')) img.setAttribute('src', src);
+    });
+    $$('iframe', modal).forEach(ifr => {
+      const prev = ifr.dataset._prevSrc;
+      if (prev && !ifr.getAttribute('src')) ifr.setAttribute('src', prev);
+    });
+  }
+  function releaseModalMedia(modal) {
+    $$('iframe', modal).forEach(ifr => {
+      if (ifr.hasAttribute('src')) {
+        ifr.dataset._prevSrc = ifr.getAttribute('src');
+        ifr.removeAttribute('src');
       }
+    });
+    // 이미지는 남겨도 되지만 iOS 메모리 민감 시 다음 줄 활성화
+    // $$('img', modal).forEach(img => { if (img.getAttribute('src')) img.removeAttribute('src'); });
+  }
+
+  // ===== 히스토리 가드 =====
+  let INITIALIZED = false;
+  let PROGRAMMATIC = false;
+  let IN_POPSTATE = false;
+
+  function closeAllModals() {
+    modalsMap.forEach((m) => {
+      if (m.classList.contains('is-open')) {
+        releaseModalMedia(m);
+      }
+      m.classList.remove('is-open');
+      m.setAttribute('aria-hidden', 'true');
+    });
+    document.body.style.overflow = '';
+  }
+
+  function openById(id, fromPopstate=false) {
+    closeAllModals();
+    const modal = modalsMap.get(String(id));
+    if (!modal) return;
+
+    if (modal.parentElement !== document.body) document.body.appendChild(modal);
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    restoreModalMedia(modal);
+
+    if (!fromPopstate) {
+      PROGRAMMATIC = true;
+      history.pushState({ photoId: id }, '', '/gallery/' + id);
+      PROGRAMMATIC = false;
+    }
+  }
+
+  function closeModal(fromPopstate=false) {
+    let wasOpen = false;
+    modalsMap.forEach(m => { if (m.classList.contains('is-open')) wasOpen = true; });
+    closeAllModals();
+
+    if (!fromPopstate && wasOpen) {
+      // URL 청소: 루트만 남김
+      PROGRAMMATIC = true;
+      history.replaceState({}, '', '/');
+      PROGRAMMATIC = false;
+    }
+  }
+
+  function parsePhotoIdFromURL() {
+    const pathMatch = location.pathname.match(/\/gallery\/([^/]+)$/);
+    if (pathMatch) return pathMatch[1];
+    const sp = new URLSearchParams(location.search);
+    return sp.get('photoId');
+  }
+
+  // ===== 앵커 클릭 → 모달 열기 =====
+  anchors.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('data-photo-id');
+      openById(id, false);
     });
   });
 
-  // 모든 모달을 감시
-  const modals = document.querySelectorAll('.modal');
-  modals.forEach((el) => observer.observe(el, { attributes: true, attributeFilter: ['class'] }));
-};
+  // ===== 모달 닫기 버튼 =====
+  $$('[data-modal-close]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal(false);
+    });
+  });
 
-// DOM 준비 후 실행
-document.addEventListener('DOMContentLoaded', () => {
-  // 썸네일 webp + lazy
-  patchGridThumbnails();
+  // ===== ESC 닫기 =====
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal(false);
+  });
 
-  // 모달 오픈 시점에 모달 내부 이미지 webp 로드
-  bindModalOpenHandler();
-});
+  // ===== popstate =====
+  window.addEventListener('popstate', () => {
+    if (PROGRAMMATIC) return;
+    IN_POPSTATE = true;
+    const pid = parsePhotoIdFromURL();
+    if (pid) openById(pid, true);
+    else closeModal(true);
+    IN_POPSTATE = false;
+  });
+
+  // ===== 초기 URL 상태 반영 =====
+  (function initFromURL() {
+    const initial = parsePhotoIdFromURL();
+    if (initial) openById(initial, true);
+    INITIALIZED = true;
+  })();
+
+  // ===== [핵심 수정] 모달 내부 data-type 클릭 시: 모바일 라인 갱신 추가 =====
+  // 다른 스크립트가 필터 적용을 담당해도, 여기서는 label만 확실히 반영한다.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.modal .data-type[data-filter]');
+    if (!btn) return;
+
+    // 기존 동작(필터 적용/타이틀 갱신)은 다른 스크립트가 수행.
+    // 여기서는 모바일일 때 mobile-filter-line만 업데이트.
+    const label = getLocalizedLabelFromButton(btn, (btn.textContent||'').trim());
+    if (!isDesktop()) updateMobileLine(label);
+
+    // 모달 닫기는 기존 닫기 버튼 트리거를 따라간다(사이트 구현 통일성 유지)
+    const closeBtn = $('.modal.is-open [data-modal-close]');
+    if (closeBtn) {
+      e.preventDefault();
+      closeBtn.click();
+    }
+  });
+
+})();
