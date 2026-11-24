@@ -15,7 +15,17 @@ body {
   background: #fff;
   word-break: keep-all;
   padding: 0 var(--m);
+  /* 푸터를 화면 맨 아래에 붙임: 내용이 짧은 큰 화면에선 바닥에, 긴 화면에선 내용 바로 아래에 */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
+main { flex: 1; }
+
+/* 스크롤바 숨김 (스크롤은 그대로 됨) — 드롭다운 열 때 스크롤바가 생기며 화면이 밀리는 현상 방지 */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 
 a { color: inherit; text-decoration: none; }
 
