@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --ink: #000; /* index.html에서 랜덤 진한 색으로 덮어씀 */
+  --ink: #000; 
   --line: 1px solid var(--ink);
   --m: 20px;
 }
@@ -15,7 +15,6 @@ body {
   background: #fff;
   word-break: keep-all;
   padding: 0 var(--m);
-  /* 푸터를 화면 맨 아래에 붙임: 내용이 짧은 큰 화면에선 바닥에, 긴 화면에선 내용 바로 아래에 */
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -23,9 +22,6 @@ body {
 }
 main { flex: 1; }
 
-/* 스크롤바 숨김 (스크롤은 그대로 됨) — 드롭다운을 열어 내용이 길어질 때 스크롤바가 갑자기 생기며 화면이 밀리는 현상 방지
-   일부 브라우저(사파리 등)는 페이지 자체의 스크롤바를 숨기지 못해서,
-   마우스를 쓰는 기기에서는 페이지 대신 body가 스크롤되게 하고 body의 스크롤바를 숨김 */
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
 @media (hover: hover) and (pointer: fine) {
@@ -89,9 +85,7 @@ summary {
   list-style: none;
 }
 summary::-webkit-details-marker { display: none; }
-/* + 아이콘 → 열리면 깃발(거꾸로 된 4)로 변함. 선은 구분선과 같은 1px
-   ① 가로선 왼쪽 절반이 중앙으로 줄어듦 ② 위 중앙→오른쪽 중앙 대각선이 그어짐 ③ 삼각형이 검게 채워짐
-   닫을 때는 반대 순서 */
+
 .icon { flex-shrink: 0; align-self: center; width: 15px; height: 15px; overflow: visible; margin-right: 1px; } /* 오른쪽 둥근 끝(0.5px)이 잘리지 않도록 1px 여유 */
 .icon line { stroke: var(--ink); stroke-width: 1; stroke-linecap: round; } /* 끝을 둥글게: 대각선과 만나는 꼭짓점이 매끄럽게 맞물림 */
 .icon .h-left { transform-box: fill-box; transform-origin: right center; transition: transform .2s ease .3s; }
