@@ -40,11 +40,16 @@ header {
   padding: var(--m) 0;
   border-bottom: var(--line);
 }
-header svg {
+/* 제목(클릭하면 새로고침). 제목 크기는 여기 width로 조절 */
+header a {
   display: block;
   width: min(250px, 100%);
-  height: auto;
   margin: 0 auto;
+}
+header svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 section, .buttons { border-bottom: var(--line); }
