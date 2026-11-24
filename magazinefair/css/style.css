@@ -23,9 +23,18 @@ body {
 }
 main { flex: 1; }
 
-/* 스크롤바 숨김 (스크롤은 그대로 됨) — 드롭다운 열 때 스크롤바가 생기며 화면이 밀리는 현상 방지 */
+/* 스크롤바 숨김 (스크롤은 그대로 됨) — 드롭다운을 열어 내용이 길어질 때 스크롤바가 갑자기 생기며 화면이 밀리는 현상 방지
+   일부 브라우저(사파리 등)는 페이지 자체의 스크롤바를 숨기지 못해서,
+   마우스를 쓰는 기기에서는 페이지 대신 body가 스크롤되게 하고 body의 스크롤바를 숨김 */
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  html { height: 100%; overflow: hidden; }
+  body { height: 100%; overflow-y: auto; scrollbar-width: none; }
+  body::-webkit-scrollbar { display: none; }
+  header, footer { flex-shrink: 0; }
+  main { flex: 1 0 auto; }
+}
 
 a { color: inherit; text-decoration: none; }
 
