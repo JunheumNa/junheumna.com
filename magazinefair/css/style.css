@@ -56,10 +56,12 @@ section, .buttons { border-bottom: var(--line); }
 h1, h2, h3, summary { font-size: 16px; font-weight: 600; }
 
 .info { padding: var(--m) 0; }
+.info h2 { margin-bottom: 10px; }
 .info dl {
   display: grid;
-  grid-template-columns: 6em 1fr;
+  grid-template-columns: 7em 1fr;
 }
+.info .note { margin-top: 10px; font-size: 14px; }
 
 .text { padding: var(--m) 0; }
 .text p { max-width: 40em; }
@@ -85,6 +87,7 @@ details { border-bottom: var(--line); overflow: hidden; }
 summary {
   display: flex;
   justify-content: space-between;
+  gap: var(--m);
   padding: 12px 0;
   cursor: pointer;
   list-style: none;
@@ -102,12 +105,8 @@ details.is-open .icon .tri { opacity: 1; transition-delay: .3s; }
 
 details.is-open { cursor: pointer; }
 
-details > p, details > ol { padding-bottom: 12px; max-width: 40em; }
-details > p + ol, details > ol + p { margin-top: -6px; }
-details ol { counter-reset: n; }
-details ol > li { counter-increment: n; padding-left: 1.5em; position: relative; }
-details ol > li::before { content: counter(n) "."; position: absolute; left: 0; }
-details ul { padding: 4px 0; }
+.answer { padding-bottom: 12px; max-width: 40em; }
+.answer p + p { margin-top: .5em; }
 
 footer {
   display: flex;
